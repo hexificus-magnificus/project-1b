@@ -6,7 +6,7 @@ namespace CMPUT350 {
 
 GameEngine::GameEngine(unsigned int width, unsigned int height, const std::string& name)
 	: mFont(std::make_shared<sf::Font>()),
-	  mWindow(std::make_shared<sf::Window>(sf::VideoMode({width, height}), name))
+	  mWindow(std::make_shared<sf::RenderWindow>(sf::VideoMode({width, height}), name))
 {
     //	need to:
     //		load font
@@ -17,17 +17,20 @@ GameEngine::GameEngine(unsigned int width, unsigned int height, const std::strin
     }
 
     ctx->mEngineView = this;
-    ctx->ScreenContext = DrawContext(mWindow, mFont);
+    ctx->ScreenContext = new DrawContext(mWindow, mFont);
 
-    mWindow.setFramerateLimit(30);
+    mWindow->setFramerateLimit(30);
 }
 
 GameEngine::~GameEngine() {
     // Cleanup resources
     // mWindow->close();
     mWindow->close();
-    delete mFont;
-    delete mWindow;
+    delete ctx->ScreenContext;
+    // do shared_ptrs get destroyed with the object?
+    // i'm worried they won't decrement the ctrl block here
+    //delete mFont;
+    //delete mWindow;
 }
 
 void GameEngine::AddGameObject(std::shared_ptr<GameObject> gameObject) {
@@ -49,8 +52,8 @@ void GameEngine::Run() {
         // 1. Activate and initialize any objects added during the last frame
 	int newCount = newObjects.size();
 	for (int i = 0; i < newCount; i++) {
-		gameObjects.push_back(newCount.back());
-		newCount.pop_back();
+		gameObjects.push_back(newObjects.back());
+		newObjects.pop_back();
 	}
 
         // 2. Process events
@@ -73,7 +76,7 @@ void GameEngine::Run() {
 
         // 6. Render background
 	for (int i = 0; i < gameObjects.size(); i++) {
-		if ()
+		// if the object is a GraphicsObject, call draw() on it 
 	}
 
         // 7. Render foreground
@@ -99,6 +102,7 @@ bool GameEngine::ProcessEvents(GameContext *context)
 			// use keyPressed->unicode to get character
 		}
 	}
+	return true;
 }
 
 void GameEngine::RemoveDead() {

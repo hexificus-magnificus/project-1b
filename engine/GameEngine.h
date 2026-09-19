@@ -33,6 +33,9 @@ public:
     void Run();
 
 private:
+    void RemoveDead();
+    bool ProcessEvents(GameContext *context);
+
     std::shared_ptr<sf::RenderWindow> mWindow;
     std::shared_ptr<sf::Font> mFont;
     std::vector<std::shared_ptr<GameObject>> gameObjects;

@@ -4,20 +4,35 @@
 namespace CMPUT350 {
 #include "FontData.h"
 
-GameEngine::GameEngine(unsigned int width, unsigned int height, const std::string& name) {
-    // Sample font loading code
-    //	if (!mFont->openFromMemory(&_font, _font_len))
-    //	{
-    //		fprintf(stderr, "WARNING: Font did not load.\n");
-    //	}
+GameEngine::GameEngine(unsigned int width, unsigned int height, const std::string& name)
+	: mFont(std::make_shared<sf::Font>()),
+	  mWindow(std::make_shared<sf::Window>(sf::VideoMode({width, height}), name))
+{
+    //	need to:
+    //		load font
+    //		create window
+    //		initialize GameContext
+    if (!mFont->openFromMemory(&_font, _font_len)) {
+    	fprintf(stderr, "WARNING: Font did not load.\n");
+    }
+
+    ctx->mEngineView = this;
+    ctx->ScreenContext = DrawContext(mWindow, mFont);
+
+    mWindow.setFramerateLimit(30);
 }
 
 GameEngine::~GameEngine() {
     // Cleanup resources
     // mWindow->close();
+    mWindow->close();
+    delete mFont;
+    delete mWindow;
 }
 
-void GameEngine::AddGameObject(std::shared_ptr<GameObject> gameObject) {}
+void GameEngine::AddGameObject(std::shared_ptr<GameObject> gameObject) {
+	newObjects.push_back(gameObject);
+}
 
 /**
  * @method Run
@@ -29,20 +44,37 @@ void GameEngine::Run() {
     while (true)  // window is open
     {
         // 0. Remove any objects that are now dead
+	RemoveDead();
 
         // 1. Activate and initialize any objects added during the last frame
+	int newCount = newObjects.size();
+	for (int i = 0; i < newCount; i++) {
+		gameObjects.push_back(newCount.back());
+		newCount.pop_back();
+	}
 
         // 2. Process events
+	ProcessEvents(ctx);
 
         // 3. Update game objects
+	for (int i = 0; i < gameObjects.size(); i++) {
+		gameObjects.at(i)->Update(ctx);
+	}
 
         // 4. Process collision events
 
         // 5. Late updates
+	for (int i = 0; i < gameObjects.size(); i++) {
+		gameObjects.at(i)->LateUpdate(ctx);
+	}
 
         // Clear window
+	mWindow->clear(sf::Color::Black);
 
         // 6. Render background
+	for (int i = 0; i < gameObjects.size(); i++) {
+		if ()
+	}
 
         // 7. Render foreground
 
@@ -52,21 +84,31 @@ void GameEngine::Run() {
 
 // Sample code for processing events
 
-// bool GameEngine::ProcessEvents(GameContext *context)
-//{
-//	while (const std::optional event = mWindow->pollEvent())
-//	{
-//		if (event->is<sf::Event::Closed>())
-//		{
-//		}
-//		else if (event->is<sf::Event::Resized>())
-//		{
-//		}
-//		else if (const auto* keyPressed = event->getIf<sf::Event::TextEntered>())
-//		{
-//			// use keyPressed->unicode to get character
-//		}
-//	}
-// }
+bool GameEngine::ProcessEvents(GameContext *context)
+{
+	while (const std::optional event = mWindow->pollEvent())
+	{
+		if (event->is<sf::Event::Closed>())
+		{
+		}
+		else if (event->is<sf::Event::Resized>())
+		{
+		}
+		else if (const auto* keyPressed = event->getIf<sf::Event::TextEntered>())
+		{
+			// use keyPressed->unicode to get character
+		}
+	}
+}
+
+void GameEngine::RemoveDead() {
+    std::vector<std::shared_ptr<GameObject>> newLive;
+    for (int i = 0; i < gameObjects.size(); i++) {
+    	if (gameObjects.at(i)->IsAlive()) {
+		newLive.push_back(gameObjects.at(i));
+	}
+    }
+    gameObjects = std::move(newLive);
+}
 
 }  // namespace CMPUT350

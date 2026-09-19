@@ -1,5 +1,3 @@
-#include <cmath>
-#include <SFML/Graphics.hpp>
 #include "DrawContext.h"
 
 namespace CMPUT350 {

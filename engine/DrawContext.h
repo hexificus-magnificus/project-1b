@@ -2,6 +2,7 @@
 #define RENDERTARGET_H
 
 #include <cstdint>
+#include <cmath>
 
 #include "MathUtil.h"
 #include <SFML/Graphics.hpp>

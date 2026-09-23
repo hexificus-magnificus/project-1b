@@ -24,7 +24,6 @@ GameEngine::GameEngine(unsigned int width, unsigned int height, const std::strin
 
 GameEngine::~GameEngine() {
     // Cleanup resources
-    // mWindow->close();
     mWindow->close();
     delete ctx->ScreenContext;
     // do shared_ptrs get destroyed with the object?
@@ -35,6 +34,10 @@ GameEngine::~GameEngine() {
 
 void GameEngine::AddGameObject(std::shared_ptr<GameObject> gameObject) {
 	newObjects.push_back(gameObject);
+}
+
+std::shared_ptr<GraphicsObject> GameEngine::IsGraphicsObject(std::shared_ptr<GameObject> obj) {
+	return std::dynamic_pointer_cast<GraphicsObject, GameObject>(obj);
 }
 
 /**
@@ -75,13 +78,25 @@ void GameEngine::Run() {
 	mWindow->clear(sf::Color::Black);
 
         // 6. Render background
-	for (int i = 0; i < gameObjects.size(); i++) {
+	for (auto obj : gameObjects) {
 		// if the object is a GraphicsObject, call draw() on it 
+		// how is this supposed to know? when a GameObject is
+		// added there's no extra info about it
+		if (auto gObj = IsGraphicsObject(obj)) {
+			gObj->RenderBackground(ctx);
+		}
 	}
 
         // 7. Render foreground
+	for (auto obj : gameObjects) {
+		// if the object is a GraphicsObject, call draw() on it 
+		if (auto gObj = IsGraphicsObject(obj)) {
+			gObj->RenderForeground(ctx);
+		}
+	}
 
         // Actually render to window
+	mWindow->display();
     }
 }
 
@@ -93,6 +108,7 @@ bool GameEngine::ProcessEvents(GameContext *context)
 	{
 		if (event->is<sf::Event::Closed>())
 		{
+			mWindow->close();
 		}
 		else if (event->is<sf::Event::Resized>())
 		{
@@ -100,6 +116,10 @@ bool GameEngine::ProcessEvents(GameContext *context)
 		else if (const auto* keyPressed = event->getIf<sf::Event::TextEntered>())
 		{
 			// use keyPressed->unicode to get character
+			char key = keyPressed->unicode;
+			for (auto obj : gameObjects) {
+				obj->HandleKeyEvent(context, key);
+			}
 		}
 	}
 	return true;

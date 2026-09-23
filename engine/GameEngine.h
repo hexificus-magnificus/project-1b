@@ -7,10 +7,12 @@ class GameEngine;
 }
 
 #include <vector>
+#include <memory> // for dynamic_pointer_cast
 
 #include "GameContext.h"
 #include "EngineView.h"
 #include "GameObject.h"
+#include "GraphicsObject.h"
 #include "MathUtil.h"
 #include <SFML/Graphics.hpp>
 
@@ -35,6 +37,7 @@ public:
 private:
     void RemoveDead();
     bool ProcessEvents(GameContext *context);
+    std::shared_ptr<GraphicsObject> IsGraphicsObject(std::shared_ptr<GameObject> obj);
 
     std::shared_ptr<sf::RenderWindow> mWindow;
     std::shared_ptr<sf::Font> mFont;

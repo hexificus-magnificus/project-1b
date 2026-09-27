@@ -76,6 +76,7 @@ void GameEngine::Run() {
 				auto o2 = std::dynamic_pointer_cast<CollisionObject>(gameObjects.at(j));
 				if (o2 == nullptr)
 						continue;
+				// AABB collision, objects should do more precise checks in CollisionEnter
 				Rect intersection(o1->GetBounds());
 				intersection &= o2->GetBounds();
 				if (intersection.width < 0 || intersection.height < 0) {

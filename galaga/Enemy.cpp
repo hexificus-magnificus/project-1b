@@ -37,6 +37,7 @@ void Enemy::RenderForeground(CMPUT350::GameContext* context)
 void Enemy::CollisionEnter(const std::shared_ptr<CMPUT350::CollisionObject>& obj)
 {
 	if (std::dynamic_pointer_cast<Bullet>(obj)) {
+		// both Enemy and Bullet are already axis-aligned rectangles, so no need to check further
 		Kill();
 	}
 }

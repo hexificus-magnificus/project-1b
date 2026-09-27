@@ -12,6 +12,7 @@ class GameEngine;
 #include "GameContext.h"
 #include "EngineView.h"
 #include "GameObject.h"
+#include "CollisionObject.h"
 #include "GraphicsObject.h"
 #include "MathUtil.h"
 #include <SFML/Graphics.hpp>

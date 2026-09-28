@@ -6,6 +6,13 @@
 
 class Bullet : public CMPUT350::CollisionObject
 {
+private:
+    CMPUT350::Point2D mLocation;
+    CMPUT350::Point2D mPreviousLocation;
+    CMPUT350::Point2D mHeading;
+    CMPUT350::Rect mBounds;
+    bool mAlive;
+    bool mPlayer;
 public:
     Bullet(CMPUT350::Point2D location, CMPUT350::Point2D heading, bool player);
     bool IsPlayerBullet();

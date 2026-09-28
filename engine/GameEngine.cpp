@@ -15,7 +15,7 @@ GameEngine::GameEngine(unsigned int width, unsigned int height, const std::strin
     if (!mFont->openFromMemory(&_font, _font_len)) {
     	fprintf(stderr, "WARNING: Font did not load.\n");
     }
-
+	ctx = new GameContext();
     ctx->mEngineView = this;
     ctx->ScreenContext = new DrawContext(mWindow, mFont);
 
@@ -47,7 +47,7 @@ std::shared_ptr<GraphicsObject> GameEngine::IsGraphicsObject(std::shared_ptr<Gam
  * all objects have been destroyed.
  */
 void GameEngine::Run() {
-    while (true)  // window is open
+    while (mWindow->isOpen())  // window is open
     {
         // 0. Remove any objects that are now dead
 		RemoveDead();

@@ -5,6 +5,14 @@
 Player::Player(CMPUT350::Point2D loc)
 {
     // TODO: Update code
+    mLocation = loc;
+    mBounds.topLeft = mLocation - (mSize/2);
+    mBounds.height = mSize;
+    mBounds.width = mSize;
+    mAlive = true;
+
+    mBulletCooldown = 0;
+
 }
 
 void Player::Initialize(CMPUT350::GameContext* context)
@@ -13,6 +21,7 @@ void Player::Initialize(CMPUT350::GameContext* context)
 
 void Player::Update(CMPUT350::GameContext* context)
 {
+    mBulletCooldown--;
 }
 
 void Player::LateUpdate(CMPUT350::GameContext* context)
@@ -21,6 +30,31 @@ void Player::LateUpdate(CMPUT350::GameContext* context)
 
 bool Player::HandleKeyEvent(CMPUT350::GameContext* context, char key)
 {
+    int speed = 10;
+    if (key=='a'){
+        mLocation.x -= speed;
+        mBounds.topLeft.x -= speed;
+    }
+    if (key=='d'){
+        mLocation.x += speed;
+        mBounds.topLeft.x += speed;
+    }
+    if (key == ' '){
+        if (bullet1.expired() || bullet2.expired()){
+            CMPUT350::Point2D direction = CMPUT350::Point2D(0, -10);
+            std::shared_ptr<Bullet> bullet = std::make_shared<Bullet>(mLocation, direction, true);
+            context->mEngineView->AddGameObject(bullet);
+            if (bullet1.expired()){
+                bullet1 = bullet;
+            }else{
+                bullet2 = bullet;
+            }
+            mBulletCooldown = 5;
+        }
+        
+        
+    }
+
     return true;
 }
 
@@ -30,6 +64,7 @@ void Player::RenderBackground(CMPUT350::GameContext* context)
 
 void Player::RenderForeground(CMPUT350::GameContext* context)
 {
+    context->ScreenContext->DrawRect(mBounds, CMPUT350::Colors::cyan);
 }
 
 void Player::CollisionEnter(const std::shared_ptr<CMPUT350::CollisionObject>& obj)
@@ -45,17 +80,17 @@ void Player::CollisionEnter(const std::shared_ptr<CMPUT350::CollisionObject>& ob
 
 void Player::Kill()
 {
+    mAlive = false;
 }
 
 bool Player::IsAlive() const
 {
     // TODO: Update code
-    return true;
+    return mAlive;
 }
 
 const CMPUT350::Rect& Player::GetBounds()
 {
     // TODO: Update code
-    static CMPUT350::Rect sBounds(0, 0, 0, 0);
-    return sBounds;
+    return mBounds;
 }

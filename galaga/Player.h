@@ -2,9 +2,21 @@
 #define PLAYER_H
 
 #include "CollisionObject.h"
+#include "Bullet.h"
 
 class Player : public CMPUT350::CollisionObject
 {
+private:
+    CMPUT350::Point2D mLocation;
+    CMPUT350::Rect mBounds;
+    int mSize = 40;
+    bool mAlive;
+
+    std::weak_ptr<Bullet> bullet1;
+    std::weak_ptr<Bullet> bullet2;
+
+    int mBulletCooldown;
+    
 public:
     Player(CMPUT350::Point2D loc);
 

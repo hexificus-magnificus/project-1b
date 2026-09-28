@@ -79,7 +79,7 @@ void GameEngine::Run() {
 				// AABB collision, objects should do more precise checks in CollisionEnter
 				Rect intersection(o1->GetBounds());
 				intersection &= o2->GetBounds();
-				if (intersection.width < 0 || intersection.height < 0) {
+				if (intersection.width >= 0 && intersection.height >= 0) {
 					o1->CollisionEnter(o2);
 					o2->CollisionEnter(o1);
 				}

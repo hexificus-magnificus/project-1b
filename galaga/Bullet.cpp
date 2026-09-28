@@ -10,6 +10,7 @@ Bullet::Bullet(CMPUT350::Point2D location, CMPUT350::Point2D heading, bool playe
     mPlayer = player;
 
     mBounds = CMPUT350::Rect(mLocation, mLocation);
+    mBounds.Inset(-2);
 
 }
 
@@ -24,12 +25,18 @@ void Bullet::Initialize(CMPUT350::GameContext* context)
 
 void Bullet::Update(CMPUT350::GameContext* context)
 {
+    
     mPreviousLocation = mLocation;
     mLocation += mHeading; 
     mBounds.topLeft = mPreviousLocation;
     mBounds.width = 0;
     mBounds.height = 0;
     mBounds |= mLocation;
+    mBounds.Inset(-2);
+
+    if (mLocation.y <0){
+        Kill();
+    }
 
 }
 
@@ -48,7 +55,7 @@ void Bullet::RenderBackground(CMPUT350::GameContext* context)
 
 void Bullet::RenderForeground(CMPUT350::GameContext* context)
 {
-    context->ScreenContext->DrawLine(mPreviousLocation, mLocation, 3, CMPUT350::Colors::white);
+    context->ScreenContext->FrameRect(mBounds,1,CMPUT350::Colors::yellow);
 }
 
 void Bullet::CollisionEnter(const std::shared_ptr<CMPUT350::CollisionObject>& obj)
@@ -56,7 +63,7 @@ void Bullet::CollisionEnter(const std::shared_ptr<CMPUT350::CollisionObject>& ob
     //inspiration for code from: https://stackoverflow.com/a/351865
 
     Player* player = dynamic_cast<Player*>(obj.get());
-    if (player == nullptr){
+    if (player != nullptr && IsPlayerBullet()){
         return;
     }
     Kill();

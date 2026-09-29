@@ -28,7 +28,7 @@ void DrawContext::DrawText(const std::string &text, int pixelSize, Point2D p, RG
 void DrawContext::DrawCircle(Point2D p, float radius, RGBColor c) {
 	sf::CircleShape circle(radius);
 	circle.setFillColor(sf::Color(c.r, c.g, c.b));
-	circle.setPosition(sf::Vector2f(p.x, p.y));
+	circle.setPosition(sf::Vector2f(p.x-radius, p.y-radius));
 	mWindow->draw(circle);
 }
 
@@ -60,15 +60,25 @@ void DrawContext::FrameRect(Rect r, float width, RGBColor c) {
  * relative to the world offset and rendered onto the associated window.
  */
 void DrawContext::DrawLine(Point2D from, Point2D to, float width, RGBColor c) {
-	float angle = std::acos(from.Dot(to) / (from.Distance({0, 0}) * to.Distance({0, 0})));
-	float dist = to.Distance(from);
-	sf::Vector2f size(dist, width);
-	sf::RectangleShape line(size);
-	line.setOrigin({0, width/2});
-	line.setPosition({from.x, from.y});
-	line.setRotation(sf::radians(angle));
-	line.setFillColor(sf::Color(c.r, c.g, c.b));
-	mWindow->draw(line);
+	Point2D btwn = to - from;
+	float m = btwn.y/btwn.x;
+	float perpm = -1/m;
+	Point2D perp(1, perpm);
+	perp.Normalize();
+	perp *= width;
+	// ccw winding
+	Point2D c0 = from + perp;
+	Point2D c1 = from - perp;
+	Point2D c2 = to - perp;
+	Point2D c3 = to + perp;
+	sf::ConvexShape l;
+	l.setPointCount(4);
+	l.setPoint(0, {c0.x, c0.y});
+	l.setPoint(1, {c1.x, c1.y});
+	l.setPoint(2, {c2.x, c2.y});
+	l.setPoint(3, {c3.x, c3.y});
+	l.setFillColor(sf::Color(c.r, c.g, c.b));
+	mWindow->draw(l);
 }
 
 int DrawContext::GetWindowWidth() { return mWindow->getSize().x; }

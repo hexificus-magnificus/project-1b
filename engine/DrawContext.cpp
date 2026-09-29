@@ -5,6 +5,12 @@ namespace CMPUT350 {
 DrawContext::DrawContext(std::shared_ptr<sf::RenderWindow> window, std::shared_ptr<sf::Font> font)
     : mWindow(window), mFont(font) {}
 
+/**
+ * Prints the given string at p,
+ * using sf::Shape::getLocalBounds
+ * to center it.
+ * Units in pixels
+ */
 void DrawContext::DrawCenteredText(const std::string &text, int pixelSize, Point2D p, RGBColor c) {
 	sf::Text t(*mFont, text, pixelSize);
 	sf::Color color(c.r, c.g, c.b);
@@ -17,6 +23,11 @@ void DrawContext::DrawCenteredText(const std::string &text, int pixelSize, Point
 	mWindow->draw(t);
 }
 
+/**
+ * Prints the given text with its
+ * top-left corner at p
+ * Units in pixels
+ */
 void DrawContext::DrawText(const std::string &text, int pixelSize, Point2D p, RGBColor c) {
 	sf::Text t(*mFont, text, pixelSize);
 	sf::Color color(c.r, c.g, c.b);
@@ -25,6 +36,11 @@ void DrawContext::DrawText(const std::string &text, int pixelSize, Point2D p, RG
 	mWindow->draw(t);
 }
 
+/**
+ * Draws a circle centered at p
+ * with radius r.
+ * Units in pixels
+ */
 void DrawContext::DrawCircle(Point2D p, float radius, RGBColor c) {
 	sf::CircleShape circle(radius);
 	circle.setFillColor(sf::Color(c.r, c.g, c.b));
@@ -32,6 +48,11 @@ void DrawContext::DrawCircle(Point2D p, float radius, RGBColor c) {
 	mWindow->draw(circle);
 }
 
+/**
+ * Draws a CMPUT350::Rect onto the screen.
+ * Does not support rotation.
+ * Units in pixels
+ */
 void DrawContext::DrawRect(Rect r, RGBColor c) {
 	sf::RectangleShape rect(sf::Vector2f(r.width, r.height));
 	rect.setFillColor(sf::Color(c.r, c.g, c.b));
@@ -39,6 +60,10 @@ void DrawContext::DrawRect(Rect r, RGBColor c) {
 	mWindow->draw(rect);
 }
 
+/**
+ * Same as DrawRect, but adds a border
+ * of *width* pixels
+ */
 void DrawContext::FrameRect(Rect r, float width, RGBColor c) {
 	sf::RectangleShape rect(sf::Vector2f(r.width, r.height));
 	rect.setFillColor(sf::Color(c.r, c.g, c.b));
@@ -66,7 +91,7 @@ void DrawContext::DrawLine(Point2D from, Point2D to, float width, RGBColor c) {
 	Point2D perp(1, perpm);
 	perp.Normalize();
 	perp *= width;
-	// ccw winding
+	// winding is not set cw/ccw, but will be constant within each shape
 	Point2D c0 = from + perp;
 	Point2D c1 = from - perp;
 	Point2D c2 = to - perp;

@@ -44,7 +44,7 @@ bool Player::HandleKeyEvent(CMPUT350::GameContext* context, char key)
         mCenterOfShip.x += speed;
     }
     if (key == ' '){
-        if (bullet1.expired() || bullet2.expired()){
+        if ((bullet1.expired() || bullet2.expired()) && mBulletCooldown <= 0){
             CMPUT350::Point2D direction = CMPUT350::Point2D(0, -10);
             std::shared_ptr<Bullet> bullet = std::make_shared<Bullet>(mLocation, direction, true);
             context->mEngineView->AddGameObject(bullet);

@@ -13,6 +13,8 @@ Player::Player(CMPUT350::Point2D loc)
 
     mBulletCooldown = 0;
 
+    mCenterOfShip = CMPUT350::Point2D(mBounds.topLeft.x+mBounds.width/2, mBounds.topLeft.y+mBounds.height/2);
+
 }
 
 void Player::Initialize(CMPUT350::GameContext* context)
@@ -22,6 +24,7 @@ void Player::Initialize(CMPUT350::GameContext* context)
 void Player::Update(CMPUT350::GameContext* context)
 {
     mBulletCooldown--;
+
 }
 
 void Player::LateUpdate(CMPUT350::GameContext* context)
@@ -34,10 +37,12 @@ bool Player::HandleKeyEvent(CMPUT350::GameContext* context, char key)
     if (key=='a'){
         mLocation.x -= speed;
         mBounds.topLeft.x -= speed;
+        mCenterOfShip.x -= speed;
     }
     if (key=='d'){
         mLocation.x += speed;
         mBounds.topLeft.x += speed;
+        mCenterOfShip.x += speed;
     }
     if (key == ' '){
         if (bullet1.expired() || bullet2.expired()){
@@ -64,7 +69,54 @@ void Player::RenderBackground(CMPUT350::GameContext* context)
 
 void Player::RenderForeground(CMPUT350::GameContext* context)
 {
-    context->ScreenContext->DrawRect(mBounds, CMPUT350::Colors::cyan);
+
+    CMPUT350::Rect center = CMPUT350::Rect(mCenterOfShip.x-2, mCenterOfShip.y-22, 4, 52);
+    CMPUT350::Rect centerLower = CMPUT350::Rect(mCenterOfShip.x-4, mCenterOfShip.y-10, 8, 37);
+    CMPUT350::Rect centerLowest = CMPUT350::Rect(mCenterOfShip.x-8, mCenterOfShip.y-4, 16, 26);
+
+    //wings
+    //context->ScreenContext->DrawRect(mBounds, CMPUT350::Colors::cyan);
+    int wingWidth = 4;
+    int wingHeight = 14;
+    int wingOffsetY = 4;
+    int wingCount = 5;
+    int wingStartOffsetX = 8;
+    int wingSpacing = 4;
+    for (int i = 0; i <wingCount;i++){
+        CMPUT350::Rect leftWing = CMPUT350::Rect(mCenterOfShip.x - wingStartOffsetX - i * wingWidth,mCenterOfShip.y + wingOffsetY + i * wingSpacing,wingWidth,wingHeight);
+        CMPUT350::Rect rightWing = CMPUT350::Rect(mCenterOfShip.x + wingWidth + i * wingWidth,mCenterOfShip.y + wingOffsetY + i * wingSpacing,wingWidth,wingHeight);
+        context->ScreenContext->DrawRect(leftWing, CMPUT350::Colors::white);
+        context->ScreenContext->DrawRect(rightWing, CMPUT350::Colors::white);
+    }
+
+    // 
+    CMPUT350::Rect tip = CMPUT350::Rect(mCenterOfShip.x-2, mCenterOfShip.y-22, 4, 6);
+    
+    context->ScreenContext->DrawRect(center, CMPUT350::Colors::white);
+    context->ScreenContext->DrawRect(centerLower, CMPUT350::Colors::white);
+    context->ScreenContext->DrawRect(centerLowest, CMPUT350::Colors::white);
+    context->ScreenContext->DrawRect(tip, CMPUT350::Colors::magenta);
+    CMPUT350::Rect wingEndLeft = CMPUT350::Rect(mCenterOfShip.x-24, mCenterOfShip.y, 4, 20);
+    CMPUT350::Rect wingEndRight = CMPUT350::Rect(mCenterOfShip.x+20, mCenterOfShip.y, 4, 20);
+    CMPUT350::Rect wingEndLeftTip = CMPUT350::Rect(mCenterOfShip.x-24, mCenterOfShip.y, 4, 8);
+    CMPUT350::Rect wingEndRightTip = CMPUT350::Rect(mCenterOfShip.x+20, mCenterOfShip.y, 4, 8);
+    CMPUT350::Rect engineLeft = CMPUT350::Rect(mCenterOfShip.x-12, mCenterOfShip.y+22, 6, 8);
+    CMPUT350::Rect engineRight = CMPUT350::Rect(mCenterOfShip.x+6, mCenterOfShip.y+22, 6, 8);
+    CMPUT350::Rect centerDesign = CMPUT350::Rect(mCenterOfShip.x-1.5, mCenterOfShip.y, 3, 8);
+    CMPUT350::Rect centerDesignLeft = CMPUT350::Rect(mCenterOfShip.x-4.5, mCenterOfShip.y+3, 3, 8);
+    CMPUT350::Rect centerDesignRight = CMPUT350::Rect(mCenterOfShip.x+1.5, mCenterOfShip.y+3, 3, 8);
+    
+
+    context->ScreenContext->DrawRect(engineLeft, CMPUT350::Colors::magenta);
+    context->ScreenContext->DrawRect(engineRight, CMPUT350::Colors::magenta);
+    context->ScreenContext->DrawRect(wingEndLeft, CMPUT350::Colors::white);
+    context->ScreenContext->DrawRect(wingEndRight, CMPUT350::Colors::white);
+    context->ScreenContext->DrawRect(wingEndLeftTip, CMPUT350::Colors::magenta);
+    context->ScreenContext->DrawRect(wingEndRightTip, CMPUT350::Colors::magenta);
+    context->ScreenContext->DrawRect(centerDesign, CMPUT350::Colors::magenta);
+    context->ScreenContext->DrawRect(centerDesignLeft, CMPUT350::Colors::magenta);
+    context->ScreenContext->DrawRect(centerDesignRight, CMPUT350::Colors::magenta);
+    
 }
 
 void Player::CollisionEnter(const std::shared_ptr<CMPUT350::CollisionObject>& obj)

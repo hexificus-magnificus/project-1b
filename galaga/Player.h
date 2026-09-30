@@ -16,6 +16,7 @@ private:
     std::weak_ptr<Bullet> bullet2;
 
     int mBulletCooldown;
+    CMPUT350::Point2D mCenterOfShip;
     
 public:
     Player(CMPUT350::Point2D loc);

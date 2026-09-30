@@ -184,9 +184,11 @@ struct Rect {
           width(fabs(p1.x - p2.x)),
           height(fabs(p1.y - p2.y)) {}
 
+    // Creates a square centered at a given location with a given "radius"
     Rect(Point2D center, float radius)
         : topLeft(center.x - radius, center.y - radius), width(2 * radius), height(2 * radius) {}
 
+    // Returns the smallest Rect that contains this and other
     Rect &operator|=(const Rect &other) {
         Point2D newTopLeft = Point2D(std::min(topLeft.x, other.topLeft.x), std::min(topLeft.y, other.topLeft.y));
         float rightEdge = std::max(topLeft.x+width, other.topLeft.x+other.width);
@@ -197,6 +199,8 @@ struct Rect {
     
         return *this;
     }
+
+    // returns the smallest Rect that contains this and other
     Rect &operator|=(const Point2D &other) {
         // TODO: write this code
         float rightEdge = std::max(topLeft.x+width, other.x);
@@ -207,11 +211,13 @@ struct Rect {
         height = bottomEdge-topLeft.y;
         return *this;
     }
+    // returns the smallest Rect that contains this and other
     Rect &operator|=(const Line &other) {
         *this |= other.p1;
         *this |= other.p2;
         return *this;
     }
+    // returns the overlapping area between this and other as a Rect
     Rect &operator&=(const Rect &other) {
         // source: https://www.geeksforgeeks.org/dsa/intersecting-rectangle-when-bottom-left-and-top-right-corners-of-two-rectangles-are-given/
         // !!!!!!!! what should this return if they don't overlap?
@@ -224,14 +230,17 @@ struct Rect {
         height = newBottomRight.y - newTopLeft.y;
         return *this;
     }
+    // add other to the location of the Rect element-wise
     Rect &operator+=(const Point2D &other) {
         topLeft.x += other.x;
         topLeft.y += other.y;
         return *this;
     }
+    // add other to the location of the Rect element-wise
     Rect operator+(const Point2D &other) const {
         return Rect(topLeft.x+other.x, topLeft.y+other.y, width, height);
     }
+    // shrinks the rect by inset pixels on each side
     void Inset(int inset) {
         // TODO: write this code
         topLeft.x += inset;
@@ -239,6 +248,7 @@ struct Rect {
         width -= 2*inset;
         height -= 2*inset;
     }
+    // returns true if p is inside this
     bool IsInside(const Point2D &p) const {
         if (p.x >= topLeft.x && p.x <= topLeft.x+width && p.y >= topLeft.y && p.y<= topLeft.y+height){
             return true;

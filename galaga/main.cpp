@@ -128,10 +128,19 @@ int main()
         auto player = std::make_shared<Player>(CMPUT350::Point2D(768 / 2, 900));
         engine.AddGameObject(player);
         engine.AddGameObject(std::make_shared<Stars>(250, CMPUT350::Rect(0, 0, 768, 1024)));
-        for (int x = 0; x < 4; x++)
+
+        int xMargin = 100;
+        int yMargin = 100;
+        int rows = 8;
+        int cols = 5;
+        int xSpacing = (768 - 2*xMargin) / (cols-1);
+        int ySpacing = (800 - 2*yMargin) / (rows-1);
+        for (int x = 0; x < cols; x++)
         {
-            auto enemy = std::make_shared<Enemy>(CMPUT350::Point2D(100 + x * 200, 100));
-            engine.AddGameObject(enemy);
+            for (int y = 0; y < rows; y++) {
+                auto enemy = std::make_shared<Enemy>(CMPUT350::Point2D(xMargin + x*xSpacing, yMargin + y*ySpacing));
+                engine.AddGameObject(enemy);
+            }
         }
         engine.Run();
     }

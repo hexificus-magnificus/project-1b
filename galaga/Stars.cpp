@@ -10,7 +10,7 @@ Stars::Stars(int numStars, CMPUT350::Rect bounds)
     // Generate random star positions within the bounds
     for (int x = 0; x < numStars; x++)
     {
-        mStarPositions.emplace_back(mXRand(gen), mYRand(gen));
+        mStarPositions.emplace_back(static_cast<float>(mXRand(gen)), static_cast<float>(mYRand(gen)));
     }
 }
 

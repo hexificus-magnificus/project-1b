@@ -4,14 +4,12 @@
 
 Player::Player(CMPUT350::Point2D loc)
 {
-    // TODO: Update code
     mLocation = loc;
     mBounds.topLeft = mLocation - (mSize/2);
     mBounds.height = mSize;
     mBounds.width = mSize;
     mAlive = true;
 
-    mBulletCooldown = 0;
 
     mCenterOfShip = CMPUT350::Point2D(mBounds.topLeft.x+mBounds.width/2, mBounds.topLeft.y+mBounds.height/2);
 
@@ -23,14 +21,15 @@ void Player::Initialize(CMPUT350::GameContext* context)
 
 void Player::Update(CMPUT350::GameContext* context)
 {
-    mBulletCooldown--;
-
 }
 
 void Player::LateUpdate(CMPUT350::GameContext* context)
 {
 }
 
+/**
+* @brief Handling input for movement and firing bullets
+*/ 
 bool Player::HandleKeyEvent(CMPUT350::GameContext* context, char key)
 {
     int speed = 10;
@@ -54,12 +53,8 @@ bool Player::HandleKeyEvent(CMPUT350::GameContext* context, char key)
             }else{
                 bullet2 = bullet;
             }
-            mBulletCooldown = 5;
         }
-        
-        
     }
-
     return true;
 }
 
@@ -67,15 +62,18 @@ void Player::RenderBackground(CMPUT350::GameContext* context)
 {
 }
 
+/**
+* @brief Draw spaceship
+*/ 
 void Player::RenderForeground(CMPUT350::GameContext* context)
 {
     //context->ScreenContext->DrawRect(mBounds, CMPUT350::Colors::red);
-    CMPUT350::Rect body({-5, 19}, {5, -21});
-    CMPUT350::Rect cockpit({-2, 5}, {2, 10});
-    CMPUT350::Rect wingL({-5, 0}, {-15, 10});
-    CMPUT350::Rect wingtipL({-18, -10}, {-15, 15});
-    CMPUT350::Rect wingR({5, 0}, {15, 10});
-    CMPUT350::Rect wingtipR({15, -10}, {18, 15});
+    CMPUT350::Rect body({-5.0f, 19.0f}, {5.0f, -21.0f});
+    CMPUT350::Rect cockpit({-2.0f, 5.0f}, {2.0f, 10.0f});
+    CMPUT350::Rect wingL({-5.0f, 0.0f}, {-15.0f, 10.0f});
+    CMPUT350::Rect wingtipL({-18.0f, -10.0f}, {-15.0f, 15.0f});
+    CMPUT350::Rect wingR({5.0f, 0.0f}, {15.0f, 10.0f});
+    CMPUT350::Rect wingtipR({15.0f, -10.0f}, {18.0f, 15.0f});
 
     context->ScreenContext->DrawRect(body + mLocation, CMPUT350::Colors::cyan);
     context->ScreenContext->DrawRect(cockpit + mLocation, CMPUT350::Colors::white);
@@ -84,7 +82,7 @@ void Player::RenderForeground(CMPUT350::GameContext* context)
     context->ScreenContext->DrawRect(wingR + mLocation, CMPUT350::Colors::white);
     context->ScreenContext->DrawRect(wingtipR + mLocation, CMPUT350::Colors::cyan);
 
-
+    //!!!!!!!!!!!!!!!!!!!!! version 2 ship I didn't realize you already did one
     // CMPUT350::Rect center = CMPUT350::Rect(mCenterOfShip.x-2, mCenterOfShip.y-22, 4, 52);
     // CMPUT350::Rect centerLower = CMPUT350::Rect(mCenterOfShip.x-4, mCenterOfShip.y-10, 8, 37);
     // CMPUT350::Rect centerLowest = CMPUT350::Rect(mCenterOfShip.x-8, mCenterOfShip.y-4, 16, 26);
@@ -132,6 +130,9 @@ void Player::RenderForeground(CMPUT350::GameContext* context)
    
 }
 
+/**
+* @brief Handles collisions with other collision objects
+*/ 
 void Player::CollisionEnter(const std::shared_ptr<CMPUT350::CollisionObject>& obj)
 {
     //inspiration for code from: https://stackoverflow.com/a/351865
@@ -150,12 +151,10 @@ void Player::Kill()
 
 bool Player::IsAlive() const
 {
-    // TODO: Update code
     return mAlive;
 }
 
 const CMPUT350::Rect& Player::GetBounds()
 {
-    // TODO: Update code
     return mBounds;
 }

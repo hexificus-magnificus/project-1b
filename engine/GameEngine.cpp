@@ -26,6 +26,7 @@ GameEngine::~GameEngine() {
     // Cleanup resources
     mWindow->close();
     delete ctx->ScreenContext;
+	delete ctx;
     // do shared_ptrs get destroyed with the object?
     // i'm worried they won't decrement the ctrl block here
     //delete mFont;

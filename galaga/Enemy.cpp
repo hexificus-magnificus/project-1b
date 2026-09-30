@@ -2,7 +2,7 @@
 #include "Bullet.h"
 
 Enemy::Enemy(CMPUT350::Point2D loc)
-	: pos(loc), bounds(loc, 20.f), alive(true)
+	: pos(loc), bounds(loc.x-20.0f, loc.y -20.f, 40.f, 40.f), alive(true)
 {
 }
 

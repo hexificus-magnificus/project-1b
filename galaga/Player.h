@@ -15,7 +15,6 @@ private:
     std::weak_ptr<Bullet> bullet1;
     std::weak_ptr<Bullet> bullet2;
 
-    int mBulletCooldown;
     CMPUT350::Point2D mCenterOfShip;
     
 public:

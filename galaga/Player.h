@@ -10,6 +10,7 @@ private:
     CMPUT350::Point2D mLocation;
     CMPUT350::Rect mBounds;
     int mSize = 40;
+    int mBulletCooldown = 0;
     bool mAlive;
 
     std::weak_ptr<Bullet> bullet1;

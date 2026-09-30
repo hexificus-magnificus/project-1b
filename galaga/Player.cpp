@@ -64,7 +64,20 @@ void Player::RenderBackground(CMPUT350::GameContext* context)
 
 void Player::RenderForeground(CMPUT350::GameContext* context)
 {
-    context->ScreenContext->DrawRect(mBounds, CMPUT350::Colors::cyan);
+    //context->ScreenContext->DrawRect(mBounds, CMPUT350::Colors::red);
+    CMPUT350::Rect body({-5, 19}, {5, -21});
+    CMPUT350::Rect cockpit({-2, 5}, {2, 10});
+    CMPUT350::Rect wingL({-5, 0}, {-15, 10});
+    CMPUT350::Rect wingtipL({-18, -10}, {-15, 15});
+    CMPUT350::Rect wingR({5, 0}, {15, 10});
+    CMPUT350::Rect wingtipR({15, -10}, {18, 15});
+
+    context->ScreenContext->DrawRect(body + mLocation, CMPUT350::Colors::cyan);
+    context->ScreenContext->DrawRect(cockpit + mLocation, CMPUT350::Colors::white);
+    context->ScreenContext->DrawRect(wingL + mLocation, CMPUT350::Colors::white);
+    context->ScreenContext->DrawRect(wingtipL + mLocation, CMPUT350::Colors::cyan);
+    context->ScreenContext->DrawRect(wingR + mLocation, CMPUT350::Colors::white);
+    context->ScreenContext->DrawRect(wingtipR + mLocation, CMPUT350::Colors::cyan);
 }
 
 void Player::CollisionEnter(const std::shared_ptr<CMPUT350::CollisionObject>& obj)

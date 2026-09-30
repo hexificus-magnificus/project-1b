@@ -32,7 +32,11 @@ GameEngine::~GameEngine() {
     //delete mWindow;
 }
 
+/**
+ * @brief Calls Initialize() on the provided GameObject before adding it into the engine's list
+ */
 void GameEngine::AddGameObject(std::shared_ptr<GameObject> gameObject) {
+	gameObject->Initialize(ctx);
 	newObjects.push_back(gameObject);
 }
 

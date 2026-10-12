@@ -3,7 +3,7 @@
 namespace CMPUT350 {
 
 DrawContext::DrawContext(std::shared_ptr<sf::RenderWindow> window, std::shared_ptr<sf::Font> font)
-    : mWindow(window), mFont(font) {}
+    : mWindow(window), mFont(font), viewAngleMat(0) {}
 
 /**
  * Prints the given string at p,
@@ -109,5 +109,41 @@ void DrawContext::DrawLine(Point2D from, Point2D to, float width, RGBColor c) {
 int DrawContext::GetWindowWidth() { return mWindow->getSize().x; }
 
 int DrawContext::GetWindowHeight() { return mWindow->getSize().y; }
+
+void DrawContext::SetContextOffset(Point2D p) {
+	viewPos = p;
+}
+
+// units of radians
+void DrawContext::SetContextRotation(float rotation) {
+	// normal rotation matrix for 2d point
+	viewAngleMat[0] = viewAngleMat[3] = std::cos(rotation);
+	viewAngleMat[2] = -1 * (viewAngleMat[1] = std::sin(rotation));
+}
+
+Point2D mmul(Point2D p, float m[4]) {
+	return {p.x*m[0] + p.y*m[2], p.x*m[1] + p.y*m[3]};
+}
+
+Point2D DrawContext::Transform(Point2D p) {
+	// returns (p - viewPos)M
+	p -= viewPos;
+	return mmul(p, viewAngleMat);
+}
+
+Point2D DrawContext::ReverseTransform(Point2D p) {
+	// takes (p - viewPos)M and returns p
+	// via (p - viewPos)M * (M^-1) + viewPos
+	float inv[4]{viewAngleMat[0], -viewAngleMat[1], -viewAngleMat[2], viewAngleMat[3]};
+	return mmul(p, inv) + viewPos;
+}
+
+Rect DrawContext::Transform(Rect r) {
+	// cos(viewAngle) = viewAngleMat[0]
+	// sin(viewAngle) = viewAngleMat[1]
+	float newH = r.height * viewAngleMat[0] + r.width * viewAngleMat[1];
+	float newW = r.height * viewAngleMat[1] + r.width * viewAngleMat[0];
+	return {r.topLeft, newW, newH};
+}
 
 }  // namespace CMPUT350

@@ -138,6 +138,11 @@ Point2D DrawContext::ReverseTransform(Point2D p) {
 	return mmul(p, inv) + viewPos;
 }
 
+/**
+ * This should not be used to replace an object's AABB since the
+ * Rect returned will always be >= the input one in both dimensions,
+ * leading to the AABB gradually growing out of control.
+ */
 Rect DrawContext::Transform(Rect r) {
 	// cos(viewAngle) = viewAngleMat[0]
 	// sin(viewAngle) = viewAngleMat[1]

@@ -3,7 +3,9 @@
 namespace CMPUT350 {
 
 DrawContext::DrawContext(std::shared_ptr<sf::RenderWindow> window, std::shared_ptr<sf::Font> font)
-    : mWindow(window), mFont(font), viewAngleMat(0) {}
+    : mWindow(window), mFont(font), viewAngleMat(0), mView(window->getDefaultView()) {
+		mWindow->setView(mView);
+	}
 
 /**
  * Prints the given string at p,
@@ -112,6 +114,7 @@ int DrawContext::GetWindowHeight() { return mWindow->getSize().y; }
 
 void DrawContext::SetContextOffset(Point2D p) {
 	viewPos = p;
+	mView.setCenter({p.x, p.y});
 }
 
 // units of radians
@@ -119,6 +122,7 @@ void DrawContext::SetContextRotation(float rotation) {
 	// normal rotation matrix for 2d point
 	viewAngleMat[0] = viewAngleMat[3] = std::cos(rotation);
 	viewAngleMat[2] = -1 * (viewAngleMat[1] = std::sin(rotation));
+	mView.setRotation(sf::radians(rotation));
 }
 
 Point2D mmul(Point2D p, float m[4]) {

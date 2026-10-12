@@ -53,6 +53,7 @@ private:
     std::shared_ptr<sf::Font> mFont;
     float viewAngleMat[4];
     Point2D viewPos;
+    sf::View mView;
 };
 
 }  // namespace CMPUT350

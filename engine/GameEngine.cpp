@@ -41,6 +41,25 @@ void GameEngine::AddGameObject(std::shared_ptr<GameObject> gameObject) {
 	newObjects.push_back(gameObject);
 }
 
+// ???
+void GameEngine::InstallKeyDownNotification(int, const std::string &notification) {}
+
+// ???
+void GameEngine::InstallKeyUpNotification(int, const std::string &notification) {}
+
+GameEngine::const_iterator GameEngine::cbegin() const {
+	return gameObjects.cbegin();
+} 
+GameEngine::const_iterator GameEngine::cend() const {
+	return gameObjects.cend();
+}
+GameEngine::const_iterator GameEngine::begin() const {
+	return gameObjects.begin();
+}
+GameEngine::const_iterator GameEngine::end() const {
+	return gameObjects.end();
+}
+
 std::shared_ptr<GraphicsObject> GameEngine::IsGraphicsObject(std::shared_ptr<GameObject> obj) {
 	return std::dynamic_pointer_cast<GraphicsObject>(obj);
 }

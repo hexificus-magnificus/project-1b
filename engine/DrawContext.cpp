@@ -114,7 +114,8 @@ int DrawContext::GetWindowHeight() { return mWindow->getSize().y; }
 
 void DrawContext::SetContextOffset(Point2D p) {
 	viewPos = p;
-	mView.setCenter({p.x, p.y});
+	mView.setCenter(mWindow->getDefaultView().getCenter() + sf::Vector2f{p.x, p.y});
+	mWindow->setView(mView);
 }
 
 // units of radians
@@ -123,6 +124,7 @@ void DrawContext::SetContextRotation(float rotation) {
 	viewAngleMat[0] = viewAngleMat[3] = std::cos(rotation);
 	viewAngleMat[2] = -1 * (viewAngleMat[1] = std::sin(rotation));
 	mView.setRotation(sf::radians(rotation));
+	mWindow->setView(mView);
 }
 
 Point2D mmul(Point2D p, float m[4]) {

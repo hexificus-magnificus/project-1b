@@ -32,6 +32,12 @@ public:
     GameEngine& operator=(GameEngine&&) = delete;       // Prevent move-assignment
 
     void AddGameObject(std::shared_ptr<GameObject> gameObject) override;
+    virtual void InstallKeyDownNotification(int, const std::string &notification);
+	virtual void InstallKeyUpNotification(int, const std::string &notification);
+	virtual const_iterator cbegin() const;
+	virtual const_iterator cend() const;
+	virtual const_iterator begin() const;
+	virtual const_iterator end() const;
 
     void Run();
 

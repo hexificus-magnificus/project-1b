@@ -18,6 +18,7 @@ private:
     std::weak_ptr<Bullet> bullet2;
 
     CMPUT350::Point2D mCenterOfShip;
+    CMPUT350::GameContext* mContext =nullptr;
     
 public:
     Player(CMPUT350::Point2D loc);
@@ -29,6 +30,7 @@ public:
     bool HandleKeyEvent(CMPUT350::GameContext* context, char key) override;
     bool IsAlive() const override;
     void Kill() override;
+    void ReceiveNotification(const std::string& key) override;
 
     // Graphics Object Functions
     void RenderBackground(CMPUT350::GameContext* context) override;

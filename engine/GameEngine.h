@@ -16,6 +16,7 @@ class GameEngine;
 #include "GraphicsObject.h"
 #include "MathUtil.h"
 #include <SFML/Graphics.hpp>
+#include "NotificationManager.h"
 
 namespace CMPUT350 {
 
@@ -52,6 +53,7 @@ private:
     std::vector<std::shared_ptr<GameObject>> newObjects;
     std::unordered_map<sf::Keyboard::Scan, std::string> mKeybinds;
     GameContext *ctx;
+    NotificationManager mNotificationManager;
 };
 
 }  // namespace CMPUT350

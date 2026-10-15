@@ -1,6 +1,7 @@
 #include <cassert>
 #include "Player.h"
 #include "Bullet.h"
+#include "NotificationManager.h"
 
 Player::Player(CMPUT350::Point2D loc)
 {
@@ -19,6 +20,10 @@ Player::Player(CMPUT350::Point2D loc)
 
 void Player::Initialize(CMPUT350::GameContext* context)
 {
+    mContext = context;
+    context->mNotificationManager->Register(context->CurrObject, "MoveLeft");
+    context->mNotificationManager->Register(context->CurrObject, "MoveRight");
+    context->mNotificationManager->Register(context->CurrObject, "Shoot");
 }
 
 void Player::Update(CMPUT350::GameContext* context)
@@ -31,28 +36,25 @@ void Player::LateUpdate(CMPUT350::GameContext* context)
 }
 
 /**
-* @brief Handling input for movement and firing bullets
+* @brief Handling notifications being received
 */ 
-bool Player::HandleKeyEvent(CMPUT350::GameContext* context, char key)
-{
+void Player::ReceiveNotification(const std::string& key){
     int speed = 10;
-    if (key=='a'){
+    if (key == "MoveLeft"){
         mLocation.x -= speed;
         mBounds.topLeft.x -= speed;
         mCenterOfShip.x -= speed;
         mShapes[0] = CMPUT350::Shape(mBounds);
-    }
-    if (key=='d'){
+    }else if (key == "MoveRight"){
         mLocation.x += speed;
         mBounds.topLeft.x += speed;
         mCenterOfShip.x += speed;
         mShapes[0] = CMPUT350::Shape(mBounds);
-    }
-    if (key == ' '){
+    }else if (key == "Shoot"){
         if ((bullet1.expired() || bullet2.expired()) && mBulletCooldown <= 0){
             CMPUT350::Point2D direction = CMPUT350::Point2D(0, -10);
             std::shared_ptr<Bullet> bullet = std::make_shared<Bullet>(mLocation, direction, true);
-            context->mEngineView->AddGameObject(bullet);
+            mContext->mEngineView->AddGameObject(bullet);
             if (bullet1.expired()){
                 bullet1 = bullet;
             }else{
@@ -61,9 +63,7 @@ bool Player::HandleKeyEvent(CMPUT350::GameContext* context, char key)
             mBulletCooldown = 5;
         }
     }
-    return true;
 }
-
 void Player::RenderBackground(CMPUT350::GameContext* context)
 {
 }

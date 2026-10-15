@@ -18,6 +18,7 @@ GameEngine::GameEngine(unsigned int width, unsigned int height, const std::strin
 	ctx = new GameContext();
     ctx->mEngineView = this;
     ctx->ScreenContext = new DrawContext(mWindow, mFont);
+	ctx->mNotificationManager = &mNotificationManager;
 
     mWindow->setFramerateLimit(30);
 }

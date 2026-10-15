@@ -11,6 +11,7 @@ private:
     CMPUT350::Point2D mPreviousLocation;
     CMPUT350::Point2D mHeading;
     CMPUT350::Rect mBounds;
+    std::vector<CMPUT350::Shape> mShapes;
     bool mAlive;
     bool mPlayer;
 public:
@@ -32,5 +33,6 @@ public:
     // Collision Object Functions
     void CollisionEnter(const std::shared_ptr<CMPUT350::CollisionObject>& obj) override;
     const CMPUT350::Rect& GetBounds() override;
+    const std::vector<CMPUT350::Shape> &GetShapes() override;
 };
 #endif // BULLET_H

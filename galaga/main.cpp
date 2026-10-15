@@ -8,7 +8,7 @@ class Ball : public CMPUT350::CollisionObject
 {
 public:
     Ball(int radius) : CollisionObject(), mRadius(radius), mNumCollisions(0), mLoc(radius, radius), mSpeed(3, 3),
-                       mSpeedNext(3, 3), mFrameCollisions(0)
+                       mSpeedNext(3, 3), mFrameCollisions(0), mShapes(1)
     {
         std::uniform_int_distribution<int> xRand(mRadius, 1024 - mRadius);
         std::uniform_int_distribution<int> yRand(mRadius, 768 - mRadius);
@@ -19,12 +19,14 @@ public:
         mLoc.y = yRand(gen);
         mSpeed.x = speed(gen); // Random speed between 1 and 5
         mSpeed.y = speed(gen); // Random speed between 1 and 5
+        mShapes[0] = CMPUT350::Shape(CMPUT350::Circle(mLoc, mRadius));
     }
 
     void Update(CMPUT350::GameContext* context) override
     {
         // Update ball position or state
         mLoc += mSpeedNext;
+        mShapes[0] = CMPUT350::Shape(CMPUT350::Circle(mLoc, mRadius));
         mSpeed = mSpeedNext;
         if (mLoc.x > 1024 - mRadius || mLoc.x < mRadius)
         {
@@ -84,6 +86,10 @@ public:
         return bounds;
     }
 
+    const std::vector<CMPUT350::Shape> &GetShapes() override {
+        return mShapes;
+    }
+
     bool IsAlive() const override
     {
         return mNumCollisions < 10;
@@ -103,6 +109,7 @@ private:
 
     int mRadius, mNumCollisions, mFrameCollisions;
     CMPUT350::Point2D mLoc, mSpeed, mSpeedNext, mCollisionPoint;
+    std::vector<CMPUT350::Shape> mShapes;
 };
 
 // Shared randoms across all balls

@@ -41,6 +41,25 @@ void GameEngine::AddGameObject(std::shared_ptr<GameObject> gameObject) {
 	newObjects.push_back(gameObject);
 }
 
+// ???
+void GameEngine::InstallKeyDownNotification(int, const std::string &notification) {}
+
+// ???
+void GameEngine::InstallKeyUpNotification(int, const std::string &notification) {}
+
+GameEngine::const_iterator GameEngine::cbegin() const {
+	return gameObjects.cbegin();
+} 
+GameEngine::const_iterator GameEngine::cend() const {
+	return gameObjects.cend();
+}
+GameEngine::const_iterator GameEngine::begin() const {
+	return gameObjects.begin();
+}
+GameEngine::const_iterator GameEngine::end() const {
+	return gameObjects.end();
+}
+
 std::shared_ptr<GraphicsObject> GameEngine::IsGraphicsObject(std::shared_ptr<GameObject> obj) {
 	return std::dynamic_pointer_cast<GraphicsObject>(obj);
 }
@@ -81,12 +100,19 @@ void GameEngine::Run() {
 				auto o2 = std::dynamic_pointer_cast<CollisionObject>(gameObjects.at(j));
 				if (o2 == nullptr)
 						continue;
-				// AABB collision, objects should do more precise checks in CollisionEnter
 				Rect intersection(o1->GetBounds());
 				intersection &= o2->GetBounds();
 				if (intersection.width >= 0 && intersection.height >= 0) {
-					o1->CollisionEnter(o2);
-					o2->CollisionEnter(o1);
+					// AABB collision. check further
+					Point2D collision;
+					for (Shape s1 : o1->GetShapes()) {
+						for (Shape s2 : o2->GetShapes()) {
+							if (Shape::Collides(s1, s2, collision)) {
+								o1->CollisionEnter(o2, collision);
+								o2->CollisionEnter(o1, collision);
+							}
+						}
+					}
 				}
 			}
 		}

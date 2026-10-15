@@ -53,6 +53,10 @@ struct Point2D {
         return Point2D(x*scalar, y*scalar);
     }
 
+    Point2D operator/(const float &scalar) const {
+        return Point2D(x/scalar, y/scalar);
+    }
+
     /**
     * @brief Adds a scalar to this point element-wise
     */
@@ -254,6 +258,11 @@ struct Rect {
     Rect(Point2D center, float radius)
         : topLeft(center.x - radius, center.y - radius), width(2 * radius), height(2 * radius) {}
 
+
+    Point2D center() {
+        return topLeft + Point2D{width/2, height/2};
+    }
+
     /**
     * @brief Returns the smallest Rect that contains this and another rectangle
     */
@@ -340,6 +349,24 @@ struct Rect {
             return true;
         }
         return false;
+    }
+
+    // starts at top left, counterclockwise
+    void Corners(Point2D p[4]) const {
+        p[0] = topLeft;
+        p[1] = topLeft + Point2D{0, height};
+        p[2] = topLeft + Point2D{width, height};
+        p[3] = topLeft + Point2D{width, 0};
+    }
+
+    // starts at top left, counterclockwise
+    void Sides(Line l[4]) const {
+        Point2D p[4];
+        Corners(p);
+        l[0] = Line{p[0], p[1]};
+        l[1] = Line{p[1], p[2]};
+        l[2] = Line{p[2], p[3]};
+        l[3] = Line{p[3], p[0]};
     }
 };
 

@@ -32,6 +32,12 @@ public:
     GameEngine& operator=(GameEngine&&) = delete;       // Prevent move-assignment
 
     void AddGameObject(std::shared_ptr<GameObject> gameObject) override;
+    virtual void InstallKeyDownNotification(int, const std::string &notification);
+	virtual void InstallKeyUpNotification(int, const std::string &notification);
+	virtual const_iterator cbegin() const;
+	virtual const_iterator cend() const;
+	virtual const_iterator begin() const;
+	virtual const_iterator end() const;
 
     void Run();
 
@@ -44,6 +50,7 @@ private:
     std::shared_ptr<sf::Font> mFont;
     std::vector<std::shared_ptr<GameObject>> gameObjects;
     std::vector<std::shared_ptr<GameObject>> newObjects;
+    std::unordered_map<sf::Keyboard::Scan, std::string> mKeybinds;
     GameContext *ctx;
 };
 

@@ -8,10 +8,11 @@ Bullet::Bullet(CMPUT350::Point2D location, CMPUT350::Point2D heading, bool playe
     mHeading = heading;
     mAlive = true;
     mPlayer = player;
+    mShapes = std::vector<CMPUT350::Shape>(1);
 
     mBounds = CMPUT350::Rect(mLocation, mLocation);
     mBounds.Inset(-2);
-
+    mShapes[0] = CMPUT350::Shape(mBounds);
 }
 
 bool Bullet::IsPlayerBullet()
@@ -33,6 +34,7 @@ void Bullet::Update(CMPUT350::GameContext* context)
     mBounds.height = 0;
     mBounds |= mLocation;
     mBounds.Inset(-2);
+    mShapes[0] = CMPUT350::Shape(mBounds);
 
     if (mLocation.y <0){
         Kill();
@@ -86,4 +88,8 @@ const CMPUT350::Rect& Bullet::GetBounds()
     // static CMPUT350::Rect sBounds(0, 0, 0, 0);
     // return sBounds;
     return mBounds;
+}
+
+const std::vector<CMPUT350::Shape> &Bullet::GetShapes() {
+    return mShapes;
 }

@@ -9,6 +9,7 @@ class Player : public CMPUT350::CollisionObject
 private:
     CMPUT350::Point2D mLocation;
     CMPUT350::Rect mBounds;
+    std::vector<CMPUT350::Shape> mShapes;
     int mSize = 40;
     int mBulletCooldown = 0;
     bool mAlive;
@@ -37,6 +38,7 @@ public:
     // Collision Object Functions
     void CollisionEnter(const std::shared_ptr<CMPUT350::CollisionObject>& obj) override;
     const CMPUT350::Rect& GetBounds() override;
+    const std::vector<CMPUT350::Shape> &GetShapes() override;
 
 };
 

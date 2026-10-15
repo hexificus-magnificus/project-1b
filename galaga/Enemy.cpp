@@ -2,8 +2,9 @@
 #include "Bullet.h"
 
 Enemy::Enemy(CMPUT350::Point2D loc)
-	: pos(loc), bounds(loc.x-20.0f, loc.y -20.f, 40.f, 40.f), alive(true)
+	: pos(loc), bounds(loc.x-20.0f, loc.y -20.f, 40.f, 40.f), alive(true), mShapes(1)
 {
+	mShapes[0] = CMPUT350::Shape(bounds);
 }
 
 void Enemy::Initialize(CMPUT350::GameContext* context)
@@ -55,4 +56,8 @@ bool Enemy::IsAlive() const
 const CMPUT350::Rect& Enemy::GetBounds()
 {
     return bounds;
+}
+
+const std::vector<CMPUT350::Shape> &Enemy::GetShapes() {
+	return mShapes;
 }

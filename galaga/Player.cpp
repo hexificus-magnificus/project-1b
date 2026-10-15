@@ -9,6 +9,8 @@ Player::Player(CMPUT350::Point2D loc)
     mBounds.height = mSize;
     mBounds.width = mSize;
     mAlive = true;
+    mShapes = std::vector<CMPUT350::Shape>(1);
+    mShapes[0] = CMPUT350::Shape(mBounds);
 
 
     mCenterOfShip = CMPUT350::Point2D(mBounds.topLeft.x+mBounds.width/2, mBounds.topLeft.y+mBounds.height/2);
@@ -38,11 +40,13 @@ bool Player::HandleKeyEvent(CMPUT350::GameContext* context, char key)
         mLocation.x -= speed;
         mBounds.topLeft.x -= speed;
         mCenterOfShip.x -= speed;
+        mShapes[0] = CMPUT350::Shape(mBounds);
     }
     if (key=='d'){
         mLocation.x += speed;
         mBounds.topLeft.x += speed;
         mCenterOfShip.x += speed;
+        mShapes[0] = CMPUT350::Shape(mBounds);
     }
     if (key == ' '){
         if ((bullet1.expired() || bullet2.expired()) && mBulletCooldown <= 0){
@@ -160,4 +164,8 @@ bool Player::IsAlive() const
 const CMPUT350::Rect& Player::GetBounds()
 {
     return mBounds;
+}
+
+const std::vector<CMPUT350::Shape> &Player::GetShapes() {
+    return mShapes;
 }

@@ -50,6 +50,7 @@ private:
     std::shared_ptr<sf::Font> mFont;
     std::vector<std::shared_ptr<GameObject>> gameObjects;
     std::vector<std::shared_ptr<GameObject>> newObjects;
+    std::unordered_map<sf::Keyboard::Scan, std::string> mKeybinds;
     GameContext *ctx;
 };
 

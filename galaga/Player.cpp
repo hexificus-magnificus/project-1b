@@ -3,7 +3,7 @@
 #include "Bullet.h"
 #include "NotificationManager.h"
 
-Player::Player(CMPUT350::Point2D loc)
+Player::Player(CMPUT350::Point2D loc) : mMoveLeft(false), mMoveRight(false)
 {
     mLocation = loc;
     mBounds.topLeft = mLocation - (mSize/2);
@@ -24,11 +24,33 @@ void Player::Initialize(CMPUT350::GameContext* context)
     context->mNotificationManager->Register(context->CurrObject, "MoveLeft");
     context->mNotificationManager->Register(context->CurrObject, "MoveRight");
     context->mNotificationManager->Register(context->CurrObject, "Shoot");
+    context->mNotificationManager->Register(context->CurrObject, "MoveLeftStop");
+    context->mNotificationManager->Register(context->CurrObject, "MoveRightStop");
+    clock.reset();
 }
 
 void Player::Update(CMPUT350::GameContext* context)
 {
     mBulletCooldown--;
+
+    float dt = clock.restart().asMicroseconds() / 1000.;
+    float speed = 0.3 * dt;
+    if (mMoveLeft && !mMoveRight) {
+        if (mLocation.x -speed -(mBounds.width/2) >0){
+            mLocation.x -= speed;
+            mBounds.topLeft.x -= speed;
+            mCenterOfShip.x -= speed;
+            mShapes[0] = CMPUT350::Shape(mBounds);
+        }
+    }
+    if (mMoveRight && !mMoveLeft) {
+        if (mLocation.x + speed+(mBounds.width/2) <768){
+            mLocation.x += speed;
+            mBounds.topLeft.x += speed;
+            mCenterOfShip.x += speed;
+            mShapes[0] = CMPUT350::Shape(mBounds);
+        }
+    }
 }
 
 void Player::LateUpdate(CMPUT350::GameContext* context)
@@ -41,19 +63,13 @@ void Player::LateUpdate(CMPUT350::GameContext* context)
 void Player::ReceiveNotification(const std::string& key){
     int speed = 10;
     if (key == "MoveLeft"){
-        if (mLocation.x -speed -(mBounds.width/2) >0){
-            mLocation.x -= speed;
-            mBounds.topLeft.x -= speed;
-            mCenterOfShip.x -= speed;
-            mShapes[0] = CMPUT350::Shape(mBounds);
-        }
+        mMoveLeft = true;
     }else if (key == "MoveRight"){
-        if (mLocation.x + speed+(mBounds.width/2) <768){
-            mLocation.x += speed;
-            mBounds.topLeft.x += speed;
-            mCenterOfShip.x += speed;
-            mShapes[0] = CMPUT350::Shape(mBounds);
-        }
+        mMoveRight = true;
+    } else if (key == "MoveLeftStop") {
+        mMoveLeft = false;
+    } else if (key == "MoveRightStop") {
+        mMoveRight = false;
     }else if (key == "Shoot"){
         if ((bullet1.expired() || bullet2.expired()) && mBulletCooldown <= 0){
             CMPUT350::Point2D direction = CMPUT350::Point2D(0, -10);

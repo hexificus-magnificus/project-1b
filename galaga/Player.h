@@ -13,12 +13,16 @@ private:
     int mSize = 40;
     int mBulletCooldown = 0;
     bool mAlive;
+    bool mMoveLeft;
+    bool mMoveRight;
 
     std::weak_ptr<Bullet> bullet1;
     std::weak_ptr<Bullet> bullet2;
 
     CMPUT350::Point2D mCenterOfShip;
     CMPUT350::GameContext* mContext =nullptr;
+    
+    sf::Clock clock;
     
 public:
     Player(CMPUT350::Point2D loc);

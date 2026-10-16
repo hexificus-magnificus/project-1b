@@ -8,6 +8,8 @@ class GameEngine;
 
 #include <vector>
 #include <memory> // for dynamic_pointer_cast
+#include <unordered_map>
+#include <string>
 
 #include "GameContext.h"
 #include "EngineView.h"
@@ -17,6 +19,8 @@ class GameEngine;
 #include "MathUtil.h"
 #include <SFML/Graphics.hpp>
 #include "NotificationManager.h"
+
+
 
 namespace CMPUT350 {
 
@@ -39,6 +43,9 @@ public:
 	virtual const_iterator cend() const;
 	virtual const_iterator begin() const;
 	virtual const_iterator end() const;
+
+    std::unordered_map<int, std::vector<std::string>> mKeyDownNotifications;
+    std::unordered_map<int, std::vector<std::string>> mKeyUpNotifications;
 
     void Run();
 

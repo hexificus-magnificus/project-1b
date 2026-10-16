@@ -43,10 +43,14 @@ void GameEngine::AddGameObject(std::shared_ptr<GameObject> gameObject) {
 }
 
 // ???
-void GameEngine::InstallKeyDownNotification(int, const std::string &notification) {}
+void GameEngine::InstallKeyDownNotification(int key, const std::string &notification) {
+	mKeyDownNotifications[key].push_back(notification);
+}
 
 // ???
-void GameEngine::InstallKeyUpNotification(int, const std::string &notification) {}
+void GameEngine::InstallKeyUpNotification(int key, const std::string &notification) {
+	mKeyUpNotifications[key].push_back(notification);
+}
 
 GameEngine::const_iterator GameEngine::cbegin() const {
 	return gameObjects.cbegin();
@@ -157,13 +161,21 @@ bool GameEngine::ProcessEvents(GameContext *context)
 		}
 		else if (event->is<sf::Event::Resized>())
 		{
-		}
-		else if (const auto* keyPressed = event->getIf<sf::Event::TextEntered>())
-		{
-			// use keyPressed->unicode to get character
-			char key = keyPressed->unicode;
-			for (auto obj : gameObjects) {
-				obj->HandleKeyEvent(context, key);
+		}else if (const auto* keyPressed = event->getIf<sf::Event::KeyPressed>()){
+			int key = static_cast<int>(keyPressed->code);
+			auto event = mKeyDownNotifications.find(key);
+			if (event != mKeyDownNotifications.end()){
+				for (const auto& notification : event ->second){
+					mNotificationManager.Notify(notification);
+				}
+			}
+		}else if (const auto* keyReleased = event->getIf<sf::Event::KeyReleased>()){
+			int key = static_cast<int>(keyReleased->code);
+			auto event = mKeyUpNotifications.find(key);
+			if (event != mKeyUpNotifications.end()){
+				for (const auto& notification : event ->second){
+					mNotificationManager.Notify(notification);
+				}
 			}
 		}
 	}

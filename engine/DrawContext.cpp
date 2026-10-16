@@ -53,7 +53,7 @@ void DrawContext::DrawCircle(Point2D p, float radius, RGBColor c) {
 	sf::CircleShape circle(radius);
 	circle.setFillColor(sf::Color(c.r, c.g, c.b));
 	Point2D newP = Transform(p);
-	circle.setOrigin({radius/2, radius/2});
+	circle.setOrigin({radius, radius});
 	circle.setPosition(sf::Vector2f(newP.x, newP.y));
 	mWindow->draw(circle);
 }

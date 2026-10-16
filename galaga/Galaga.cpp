@@ -40,6 +40,8 @@ void Galaga::Initialize(CMPUT350::GameContext *context) {
     context->mEngineView->InstallKeyDownNotification(static_cast<int>(sf::Keyboard::Key::Space), "Shoot");
     context->mEngineView->InstallKeyDownNotification(static_cast<int>(sf::Keyboard::Key::Num5), "InsertCoins");
     context->mEngineView->InstallKeyDownNotification(static_cast<int>(sf::Keyboard::Key::Num1), "StartGame");
+    context->mEngineView->InstallKeyUpNotification(static_cast<int>(sf::Keyboard::Key::A), "MoveLeftStop");
+    context->mEngineView->InstallKeyUpNotification(static_cast<int>(sf::Keyboard::Key::D), "MoveRightStop");
     context->mNotificationManager->Register(context->CurrObject, "InsertCoins");
     context->mNotificationManager->Register(context->CurrObject, "StartGame");
     

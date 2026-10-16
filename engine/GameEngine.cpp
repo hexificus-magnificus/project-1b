@@ -96,6 +96,7 @@ void GameEngine::Run() {
 
         // 3. Update game objects
 		for (auto obj : gameObjects) {
+			ctx->CurrObject = obj;
 			obj->Update(ctx);
 		}
 
@@ -127,6 +128,7 @@ void GameEngine::Run() {
 
         // 5. Late updates
 		for (auto obj : gameObjects) {
+			ctx->CurrObject = obj;
 			obj->LateUpdate(ctx);
 		}
 
@@ -136,6 +138,8 @@ void GameEngine::Run() {
         // 6. Render background
 		for (auto obj : gameObjects) {
 			if (auto gObj = IsGraphicsObject(obj)) {
+				ctx->ScreenContext->SetContextOffset(gObj->GetLocation());
+				ctx->ScreenContext->SetContextRotation(gObj->GetRotation());
 				gObj->RenderBackground(ctx);
 			}
 		}
@@ -143,10 +147,13 @@ void GameEngine::Run() {
         // 7. Render foreground
 		for (auto obj : gameObjects) {
 			if (auto gObj = IsGraphicsObject(obj)) {
+				ctx->ScreenContext->SetContextOffset(gObj->GetLocation());
+				ctx->ScreenContext->SetContextRotation(gObj->GetRotation());
 				gObj->RenderForeground(ctx);
 			}
 		}
 
+		ctx->ScreenContext->ResetView();
 		for (auto obj : gameObjects) {
 			obj->RenderUI(ctx);
 		}

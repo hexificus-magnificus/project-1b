@@ -45,12 +45,14 @@ private:
     friend class GameEngine;
 	void SetContextOffset(Point2D p);
 	void SetContextRotation(float rotation);
+    void ResetView();
 	Point2D Transform(Point2D p);
 	Point2D ReverseTransform(Point2D p);
 	Rect Transform(Rect r); // Rotates rectangle and computes new bounding box after rotation
 
     std::shared_ptr<sf::RenderWindow> mWindow;
     std::shared_ptr<sf::Font> mFont;
+    float viewAngle;
     float viewAngleMat[4];
     Point2D viewPos;
     sf::View mView;

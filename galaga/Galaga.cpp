@@ -26,14 +26,18 @@ void Galaga::SetState(GameState s) {
 }
 
 std::shared_ptr<Enemy> Galaga::SpawnEnemy(CMPUT350::GameContext *context) {
-    
+    return std::make_shared<Enemy>(CMPUT350::Point2D(rand() % 768, rand() % 400));
 }
 
 Galaga::Galaga() : state(GameState::menu), wave(0), scoreCtr(nullptr), waveCtr(nullptr), enemies(8) {}
 
 void Galaga::Initialize(CMPUT350::GameContext *context) {
+    std::cout << "Galaga Initialize called!" << std::endl;
     clock.reset();
     SetState(GameState::menu);
+    context->mEngineView->InstallKeyDownNotification(static_cast<int>(sf::Keyboard::Key::A), "MoveLeft");
+    context->mEngineView->InstallKeyDownNotification(static_cast<int>(sf::Keyboard::Key::D), "MoveRight");
+    context->mEngineView->InstallKeyDownNotification(static_cast<int>(sf::Keyboard::Key::Space), "Shoot");
 }
 
 void Galaga::Update(CMPUT350::GameContext *context) {

@@ -38,8 +38,10 @@ GameEngine::~GameEngine() {
  * @brief Calls Initialize() on the provided GameObject before adding it into the engine's list
  */
 void GameEngine::AddGameObject(std::shared_ptr<GameObject> gameObject) {
+	ctx->CurrObject = gameObject;
 	gameObject->Initialize(ctx);
 	newObjects.push_back(gameObject);
+
 }
 
 // ???

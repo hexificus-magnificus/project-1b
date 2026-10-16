@@ -26,7 +26,8 @@ void Galaga::SetState(GameState s) {
 }
 
 std::shared_ptr<Enemy> Galaga::SpawnEnemy(CMPUT350::GameContext *context) {
-    return std::make_shared<Enemy>(CMPUT350::Point2D(rand() % 768, rand() % 400));
+    
+
 }
 
 Galaga::Galaga() : state(GameState::menu), wave(0), scoreCtr(nullptr), waveCtr(nullptr), enemies(8) {}
@@ -59,6 +60,7 @@ void Galaga::Update(CMPUT350::GameContext *context) {
         case GameState::waveEnter:
             for (int i = 0; i < 8; i++) {
                 enemies[i] = SpawnEnemy(context);
+                context->mEngineView->AddGameObject(enemies[i]);
             }
             SetState(GameState::play);
             break;

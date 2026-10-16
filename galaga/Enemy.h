@@ -7,7 +7,7 @@
 class Enemy : public CMPUT350::CollisionObject
 {
 public:
-    Enemy(CMPUT350::Point2D loc);
+    Enemy(CMPUT350::Point2D loc, const std::vector<CMPUT350::Point2D>& path);
 
     // GameObject Functions
     void Initialize(CMPUT350::GameContext* context) override;
@@ -32,6 +32,9 @@ private:
 	CMPUT350::Rect bounds;
     std::vector<CMPUT350::Shape> mShapes;
 	bool alive;
+    float t = 0.0f;
+    CMPUT350::Point2D mStartPos;
+    std::vector<CMPUT350::Point2D> mPath;
 };
 
 

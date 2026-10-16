@@ -65,6 +65,7 @@ void Bullet::CollisionEnter(const std::shared_ptr<CMPUT350::CollisionObject>& ob
     //inspiration for code from: https://stackoverflow.com/a/351865
 
     Player* player = dynamic_cast<Player*>(obj.get());
+
     if (player != nullptr && IsPlayerBullet()){
         return;
     }

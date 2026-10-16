@@ -18,6 +18,7 @@ GameEngine::GameEngine(unsigned int width, unsigned int height, const std::strin
 	ctx = new GameContext();
     ctx->mEngineView = this;
     ctx->ScreenContext = new DrawContext(mWindow, mFont);
+	ctx->GUIContext = new DrawContext(mWindow, mFont);
 	ctx->mNotificationManager = &mNotificationManager;
 
     mWindow->setFramerateLimit(30);
@@ -144,6 +145,10 @@ void GameEngine::Run() {
 			if (auto gObj = IsGraphicsObject(obj)) {
 				gObj->RenderForeground(ctx);
 			}
+		}
+
+		for (auto obj : gameObjects) {
+			obj->RenderUI(ctx);
 		}
 
         // Actually render to window

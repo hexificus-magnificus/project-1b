@@ -3,7 +3,7 @@
 #include <format>
 #include <cstdio>
 
-UICounter::UICounter(char* str, int start, CMPUT350::Point2D pos) : t(str), c(start), topLeft(pos) {}
+UICounter::UICounter(const char* str, int start, CMPUT350::Point2D pos) : t(str), c(start), topLeft(pos) {}
 
 void UICounter::RenderUI(CMPUT350::GameContext *context) {
     char str[100];

@@ -41,15 +41,19 @@ void Player::LateUpdate(CMPUT350::GameContext* context)
 void Player::ReceiveNotification(const std::string& key){
     int speed = 10;
     if (key == "MoveLeft"){
-        mLocation.x -= speed;
-        mBounds.topLeft.x -= speed;
-        mCenterOfShip.x -= speed;
-        mShapes[0] = CMPUT350::Shape(mBounds);
+        if (mLocation.x -speed -(mBounds.width/2) >0){
+            mLocation.x -= speed;
+            mBounds.topLeft.x -= speed;
+            mCenterOfShip.x -= speed;
+            mShapes[0] = CMPUT350::Shape(mBounds);
+        }
     }else if (key == "MoveRight"){
-        mLocation.x += speed;
-        mBounds.topLeft.x += speed;
-        mCenterOfShip.x += speed;
-        mShapes[0] = CMPUT350::Shape(mBounds);
+        if (mLocation.x + speed+(mBounds.width/2) <768){
+            mLocation.x += speed;
+            mBounds.topLeft.x += speed;
+            mCenterOfShip.x += speed;
+            mShapes[0] = CMPUT350::Shape(mBounds);
+        }
     }else if (key == "Shoot"){
         if ((bullet1.expired() || bullet2.expired()) && mBulletCooldown <= 0){
             CMPUT350::Point2D direction = CMPUT350::Point2D(0, -10);
@@ -108,7 +112,6 @@ void Player::RenderForeground(CMPUT350::GameContext* context)
         context->ScreenContext->DrawRect(rightWing, CMPUT350::Colors::white);
     }
 
-
     CMPUT350::Rect tip = CMPUT350::Rect(mCenterOfShip.x-2, mCenterOfShip.y-22, 4, 6);
    
     context->ScreenContext->DrawRect(center, CMPUT350::Colors::white);
@@ -134,7 +137,7 @@ void Player::RenderForeground(CMPUT350::GameContext* context)
     context->ScreenContext->DrawRect(centerDesign, CMPUT350::Colors::magenta);
     context->ScreenContext->DrawRect(centerDesignLeft, CMPUT350::Colors::magenta);
     context->ScreenContext->DrawRect(centerDesignRight, CMPUT350::Colors::magenta);
-   
+    
 }
 
 /**

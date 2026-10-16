@@ -32,12 +32,16 @@ std::shared_ptr<Enemy> Galaga::SpawnEnemy(CMPUT350::GameContext *context) {
 Galaga::Galaga() : state(GameState::menu), wave(0), scoreCtr(nullptr), waveCtr(nullptr), enemies(8) {}
 
 void Galaga::Initialize(CMPUT350::GameContext *context) {
-    std::cout << "Galaga Initialize called!" << std::endl;
     clock.reset();
     SetState(GameState::menu);
     context->mEngineView->InstallKeyDownNotification(static_cast<int>(sf::Keyboard::Key::A), "MoveLeft");
     context->mEngineView->InstallKeyDownNotification(static_cast<int>(sf::Keyboard::Key::D), "MoveRight");
     context->mEngineView->InstallKeyDownNotification(static_cast<int>(sf::Keyboard::Key::Space), "Shoot");
+    context->mEngineView->InstallKeyDownNotification(static_cast<int>(sf::Keyboard::Key::Num5), "InsertCoins");
+    context->mEngineView->InstallKeyDownNotification(static_cast<int>(sf::Keyboard::Key::Num1), "StartGame");
+    context->mNotificationManager->Register(context->CurrObject, "InsertCoins");
+    context->mNotificationManager->Register(context->CurrObject, "StartGame");
+    
 }
 
 void Galaga::Update(CMPUT350::GameContext *context) {
@@ -74,3 +78,33 @@ void Galaga::Update(CMPUT350::GameContext *context) {
             break;
     }
 }
+void Galaga::RenderUI(CMPUT350::GameContext *context){
+    if(state == GameState::menu){
+        context->GUIContext->DrawCenteredText("GALAGA",  48,CMPUT350::Point2D(768/2, 400), CMPUT350::Colors::white);
+        context->GUIContext->DrawCenteredText("Press 5 to insert coins", 24,CMPUT350::Point2D(768/2, 500),  CMPUT350::Colors::white);
+        context->GUIContext->DrawCenteredText("Press 1 to start game", 24,CMPUT350::Point2D(768/2, 550),  CMPUT350::Colors::white);
+        context->GUIContext->DrawCenteredText("Coins: " + std::to_string(coins), 24,CMPUT350::Point2D(768/2, 650),  CMPUT350::Colors::white);
+        if (showCoinMessage){
+            context->GUIContext->DrawCenteredText("Not enough coins!", 24,CMPUT350::Point2D(768/2, 600),  CMPUT350::Colors::white);
+        }
+    }
+}
+
+void Galaga::ReceiveNotification(const std::string& key){
+    if (state == GameState::menu){
+        if (key =="InsertCoins"){
+            showCoinMessage = false;
+            coins++;
+        }
+        else if (key == "StartGame"){
+            if (coins > 0){
+                coins--;
+                SetState(GameState::startup);
+                showCoinMessage = false;
+            }else{
+                showCoinMessage = true;
+            }
+        }
+    }
+}
+

@@ -23,9 +23,11 @@ void Enemy::Update(CMPUT350::GameContext* context)
 		rotation = CMPUT350::Bezier::GetRotation(slope, t);
 		t = std::min(1.0f, t + (1.f/3.f) * dt);
 	}else{
-		rotation *= 0.9f;
-        if (std::abs(rotation) < 0.01f) {
-            rotation = 0.0f;
+		const double pi = 3.1415926535897932;
+		float target = pi / 2;
+		rotation = target + (rotation - target) * 0.9;
+        if (std::abs(rotation - target) < 0.01f) {
+            rotation = target;
         }
 	}
 	bounds = CMPUT350::Rect(pos.x - 20.f, pos.y - 20.f, 40.f, 40.f);

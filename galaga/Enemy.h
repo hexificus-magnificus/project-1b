@@ -43,6 +43,7 @@ public:
 	CMPUT350::RGBColor color = CMPUT350::Colors::red;
 	void Shoot(CMPUT350::GameContext* context);
 	int mPoints = 0;
+	int addScore = 0;
 
 
 

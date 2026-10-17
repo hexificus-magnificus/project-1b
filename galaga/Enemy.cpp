@@ -34,6 +34,10 @@ void Enemy::Update(CMPUT350::GameContext* context)
 
 void Enemy::LateUpdate(CMPUT350::GameContext* context)
 {
+	if(addScore>0){
+		context->mNotificationManager->Notify("Score"+ std::to_string(addScore));
+		addScore = 0;
+	}
 }
 
 void Enemy::RenderBackground(CMPUT350::GameContext* context)
@@ -63,6 +67,7 @@ void Enemy::CollisionEnter(const std::shared_ptr<CMPUT350::CollisionObject>& obj
 			color = darkColor;
 		}
 		else if (mLives <=0){
+			addScore = mPoints;
 			Kill();	
 		}
 		

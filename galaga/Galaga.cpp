@@ -112,6 +112,9 @@ void Galaga::Initialize(CMPUT350::GameContext *context) {
     context->mNotificationManager->Register(context->CurrObject, "InsertCoins");
     context->mNotificationManager->Register(context->CurrObject, "StartGame");
     context->mNotificationManager->Register(context->CurrObject, "PlayerDead");
+    context->mNotificationManager->Register(context->CurrObject, "Score50");
+    context->mNotificationManager->Register(context->CurrObject, "Score100");
+    context->mNotificationManager->Register(context->CurrObject, "Score200");
 }
 
 void Galaga::Update(CMPUT350::GameContext *context) {
@@ -215,6 +218,11 @@ void Galaga::ReceiveNotification(const std::string& key){
     }
     if (key == "PlayerDead") {
         SetState(GameState::gameOver);
+    }else if(key=="Score50"||key=="Score100"||key=="Score200"){
+        int points = std::stoi(key.substr(5)); //ChatGPT for std::stoi(message.substr(5))
+        for (int i = 0; i < points; i++) {
+            ++(*scoreCtr);
+        }
     }
 }
 

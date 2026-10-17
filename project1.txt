@@ -1,0 +1,82 @@
+Implementation:
+
+GameEngine:
+This is pretty standard. This is responsible for the main
+game loop, which includes drawing, object updates/collisions,
+and event/input handling. The notification install methods
+were slightly modified so that their int parameter is used
+to take the key to register, when before it was unused.
+Implemented By:
+- main loop: John
+- notification passing: Kelsey
+
+Shapes:
+As per the project description, provides utilities for working
+with shapes. Our implementation adds some Rect methods for
+getting arrays of the corners/sides and center. Also includes
+Bezier curves, both position and slope.
+Implemented By:
+- MathUtil.h: Kelsey
+- Bezier.h: John
+
+NotificationManager:
+Maintains an unordered_map of objects registered to each
+notification, then notifies them when it recieves a notification.
+Also nothing extra.
+Implemented By: Kelsey
+
+DrawContext:
+Draws objects to the screen after transforming them by a certain
+internal translation/rotation. One DrawContext is kept for the world
+and one is kept for the UI. This implementation caches sin/cos for
+the internal constant angle in a matrix to speed up rotations.
+Implemented By: John
+
+Collisions:
+The updated CollisionObject API allows objects to return a vector of
+Shapes, which are checked against all shapes in another object to
+detect collisions. We have added many helper functions that enable
+the engine to call Collides(Shape a, Shape b) without checking any
+Shape members.
+Implemented By: John
+
+Galaga:
+A state machine that manages the game. Responsible for spawning
+enemies/the player and resetting the game when it is over, as well
+as the menu. The states are as follows:
+- menu
+- startup
+- waveEnter
+- play
+- gameOver
+the game begins in state menu, which displays the title and coins
+until the player begins the game, which causes a transition into the
+startup state.
+In the startup state, Galaga creates the player and score/wave counters
+and immediately moves to waveEnter state.
+In waveEnter state, Galaga spawns 8 enemies and immediately moves to
+play state.
+In play state, Galaga does nothing until it recieves a notification
+that the player has died (causing a transition to gameOver, or
+respawning depending on remaining lives) or all enemies are dead (which
+moves to waveEnter state if there are remaining waves, or menu otherwise)
+In gameOver state, Galaga displays a game over message for several
+seconds, then moves to menu state.
+Implemented By:
+- Menu screen, notification handling: Kelsey
+- state machine: John
+
+Player:
+Ship that moves back and forth at the bottom of the screen and shoots
+according to user input.
+Implemented By: Kelsey
+
+Bullet:
+Projectiles from either the player or enemies. On contact, reduces HP
+by 1.
+Implemented By: Kelsey
+
+Enemy:
+Fly in at the start of each wave and attack the player. There are 3
+types which vary in HP and attack pattern.
+Implemented By: Kelsey

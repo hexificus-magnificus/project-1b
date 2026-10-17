@@ -48,7 +48,7 @@ void Enemy::Update(CMPUT350::GameContext* context)
         pos.x = mStopPosition.x + offset;
         pos.y = mStopPosition.y;
 
-        // Return to formation rotation
+        // Return to formation rotation help with chatgpt
         const float pi = 3.1415926535897932f;
         float target = pi / 2;
 

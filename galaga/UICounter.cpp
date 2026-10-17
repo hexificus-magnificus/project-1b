@@ -14,3 +14,6 @@ void UICounter::RenderUI(CMPUT350::GameContext *context) {
 int UICounter::operator++() {
     return ++c;
 }
+
+bool UICounter::IsAlive() const { return alive; }
+void UICounter::Kill() { alive = false; }

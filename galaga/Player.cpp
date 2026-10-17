@@ -176,7 +176,7 @@ void Player::CollisionEnter(const std::shared_ptr<CMPUT350::CollisionObject>& ob
     }if (enemy != nullptr){
         mActive = false;
         if (--mLives <0){
-            Kill();
+            needDie = true;
         }
     }
 }

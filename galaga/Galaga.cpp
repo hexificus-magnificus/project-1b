@@ -2,7 +2,7 @@
 
 void Galaga::SetState(GameState s) {
     if (s == GameState::gameOver) {
-        clock.reset();
+        clock.restart();
     }
     if (s == GameState::menu) {
         if (state == GameState::gameOver) {
@@ -13,9 +13,16 @@ void Galaga::SetState(GameState s) {
             // swap pointers out of member vars so they can be deconstructed properly
             std::shared_ptr<UICounter> sTemp = std::move(scoreCtr);
             std::shared_ptr<UICounter> wTemp = std::move(waveCtr);
+            sTemp->Kill();
+            wTemp->Kill();
 
             scoreCtr = nullptr;
             waveCtr = nullptr;
+
+            for (int i = 0; i < enemies.size(); i++) {
+                auto tmp = std::move(enemies[i]);
+                tmp->Kill();
+            }
         }
         wave = 0;
     }
@@ -94,6 +101,8 @@ std::shared_ptr<Enemy> Galaga::SpawnEnemy(
 
     return nullptr;
 }
+
+    
 
 Galaga::Galaga() : state(GameState::menu), wave(0), scoreCtr(nullptr), waveCtr(nullptr), enemies(8) {}
 
@@ -195,6 +204,8 @@ void Galaga::RenderUI(CMPUT350::GameContext *context){
         if (showCoinMessage){
             context->GUIContext->DrawCenteredText("Not enough coins!", 24,CMPUT350::Point2D(768/2, 600),  CMPUT350::Colors::white);
         }
+    } else if (state == GameState::gameOver) {
+        context->GUIContext->DrawCenteredText("Game Over",  48,CMPUT350::Point2D(768/2, 400), CMPUT350::Colors::white);
     }
 }
 
@@ -215,6 +226,7 @@ void Galaga::ReceiveNotification(const std::string& key){
         }
     }
     if (key == "PlayerDead") {
+        std::cout << "player died\n";
         SetState(GameState::gameOver);
     }else if(key=="Score50"||key=="Score100"||key=="Score200"){
         int points = std::stoi(key.substr(5)); //ChatGPT for std::stoi(message.substr(5))

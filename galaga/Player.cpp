@@ -101,6 +101,7 @@ void Player::RenderBackground(CMPUT350::GameContext* context)
 }
 
 void Player::DrawShip(CMPUT350::DrawContext *ctx, CMPUT350::Point2D p) {
+    ctx->DrawRect(mBounds, CMPUT350::Colors::red);
     CMPUT350::Rect center = CMPUT350::Rect(p.x-2, p.y-22, 4, 52);
     CMPUT350::Rect centerLower = CMPUT350::Rect(p.x-4, p.y-10, 8, 37);
     CMPUT350::Rect centerLowest = CMPUT350::Rect(p.x-8, p.y-4, 16, 26);

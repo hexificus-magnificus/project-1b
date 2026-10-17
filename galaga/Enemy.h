@@ -42,6 +42,8 @@ public:
 	CMPUT350::RGBColor lightColor = CMPUT350::Colors::red;
 	CMPUT350::RGBColor color = CMPUT350::Colors::red;
 	void Shoot(CMPUT350::GameContext* context);
+	int mPoints = 0;
+
 
 
 private:
@@ -59,6 +61,7 @@ public:
 	:Enemy(loc, path, stopPosition){
 		lightColor = CMPUT350::Colors::red;
 		color = lightColor;
+		mPoints = 50;
 	}
 	void Initialize(CMPUT350::GameContext *context) override;
 	void LateUpdate(CMPUT350::GameContext *context) override;
@@ -75,6 +78,7 @@ public:
 		mediumColor = CMPUT350::Colors::mediumGreen;
 		lightColor = CMPUT350::Colors::lightGreen;
 		color = mediumColor;
+		mPoints = 100;
 	}
 	void Initialize(CMPUT350::GameContext *context) override;
 	void LateUpdate(CMPUT350::GameContext *context) override;
@@ -90,6 +94,7 @@ public:
 		darkColor = CMPUT350::Colors::darkBlue;
 		mediumColor = CMPUT350::Colors::mediumBlue;
 		lightColor = CMPUT350::Colors::lightBlue;
+		mPoints = 200;
 	}
 	void Initialize(CMPUT350::GameContext *context) override;
 	void LateUpdate(CMPUT350::GameContext *context) override;

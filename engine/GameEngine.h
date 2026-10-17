@@ -51,6 +51,7 @@ public:
 
 private:
     void RemoveDead();
+    void CheckCollision(std::shared_ptr<CollisionObject> o1, std::shared_ptr<CollisionObject> o2);
     bool ProcessEvents(GameContext *context);
     std::shared_ptr<GraphicsObject> IsGraphicsObject(std::shared_ptr<GameObject> obj);
 

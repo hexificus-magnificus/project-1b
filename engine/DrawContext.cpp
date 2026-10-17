@@ -3,8 +3,10 @@
 namespace CMPUT350 {
 
 DrawContext::DrawContext(std::shared_ptr<sf::RenderWindow> window, std::shared_ptr<sf::Font> font)
-    : mWindow(window), mFont(font), viewAngleMat(0), mView(window->getDefaultView()) {
+    : mWindow(window), mFont(font), viewAngleMat(0), mView(window->getDefaultView())
+	{
 		mWindow->setView(mView);
+		ResetView();
 	}
 
 /**
@@ -20,8 +22,10 @@ void DrawContext::DrawCenteredText(const std::string &text, int pixelSize, Point
 	sf::FloatRect box = t.getLocalBounds();
 	float width = box.size.x;
 	float height = box.size.y;
+	Point2D newP = Transform(p);
 	t.setOrigin(sf::Vector2f(width/2, height/2));
-	t.setPosition(sf::Vector2f(p.x, p.y));
+	t.setPosition({newP.x, newP.y});
+	t.setRotation(sf::radians(viewAngle));
 	mWindow->draw(t);
 }
 
@@ -34,7 +38,9 @@ void DrawContext::DrawText(const std::string &text, int pixelSize, Point2D p, RG
 	sf::Text t(*mFont, text, pixelSize);
 	sf::Color color(c.r, c.g, c.b);
 	t.setFillColor(color);
-	t.setPosition(sf::Vector2f(p.x, p.y));
+	Point2D newP = Transform(p);
+	t.setPosition({newP.x, newP.y});
+	t.setRotation(sf::radians(viewAngle));
 	mWindow->draw(t);
 }
 
@@ -46,7 +52,9 @@ void DrawContext::DrawText(const std::string &text, int pixelSize, Point2D p, RG
 void DrawContext::DrawCircle(Point2D p, float radius, RGBColor c) {
 	sf::CircleShape circle(radius);
 	circle.setFillColor(sf::Color(c.r, c.g, c.b));
-	circle.setPosition(sf::Vector2f(p.x-radius, p.y-radius));
+	Point2D newP = Transform(p);
+	circle.setOrigin({radius, radius});
+	circle.setPosition(sf::Vector2f(newP.x, newP.y));
 	mWindow->draw(circle);
 }
 
@@ -58,7 +66,9 @@ void DrawContext::DrawCircle(Point2D p, float radius, RGBColor c) {
 void DrawContext::DrawRect(Rect r, RGBColor c) {
 	sf::RectangleShape rect(sf::Vector2f(r.width, r.height));
 	rect.setFillColor(sf::Color(c.r, c.g, c.b));
-	rect.setPosition({r.topLeft.x, r.topLeft.y});
+	Point2D newP = Transform(Point2D{r.topLeft.x, r.topLeft.y});
+	rect.setPosition({newP.x, newP.y});
+
 	mWindow->draw(rect);
 }
 
@@ -69,7 +79,8 @@ void DrawContext::DrawRect(Rect r, RGBColor c) {
 void DrawContext::FrameRect(Rect r, float width, RGBColor c) {
 	sf::RectangleShape rect(sf::Vector2f(r.width, r.height));
 	rect.setFillColor(sf::Color(c.r, c.g, c.b));
-	rect.setPosition({r.topLeft.x, r.topLeft.y});
+	Point2D newP = Transform(Point2D{r.topLeft.x, r.topLeft.y});
+	rect.setPosition({newP.x, newP.y});
 	rect.setOutlineThickness(width);
 	mWindow->draw(rect);
 }
@@ -87,6 +98,8 @@ void DrawContext::FrameRect(Rect r, float width, RGBColor c) {
  * relative to the world offset and rendered onto the associated window.
  */
 void DrawContext::DrawLine(Point2D from, Point2D to, float width, RGBColor c) {
+	from = Transform(from);
+	to = Transform(to);
 	Point2D btwn = to - from;
 	float m = btwn.y/btwn.x;
 	float perpm = -1/m;
@@ -114,17 +127,23 @@ int DrawContext::GetWindowHeight() { return mWindow->getSize().y; }
 
 void DrawContext::SetContextOffset(Point2D p) {
 	viewPos = p;
-	mView.setCenter(mWindow->getDefaultView().getCenter() + sf::Vector2f{p.x, p.y});
-	mWindow->setView(mView);
 }
 
 // units of radians
 void DrawContext::SetContextRotation(float rotation) {
 	// normal rotation matrix for 2d point
+	viewAngle = rotation;
 	viewAngleMat[0] = viewAngleMat[3] = std::cos(rotation);
 	viewAngleMat[2] = -1 * (viewAngleMat[1] = std::sin(rotation));
 	mView.setRotation(sf::radians(rotation));
 	mWindow->setView(mView);
+}
+
+void DrawContext::ResetView() {
+	viewAngle = 0;
+	viewAngleMat[0] = viewAngleMat[3] = 1;
+	viewAngleMat[1] = viewAngleMat[2] = 0;
+	viewPos = {0, 0};
 }
 
 Point2D mmul(Point2D p, float m[4]) {
@@ -132,9 +151,7 @@ Point2D mmul(Point2D p, float m[4]) {
 }
 
 Point2D DrawContext::Transform(Point2D p) {
-	// returns (p - viewPos)M
-	p -= viewPos;
-	return mmul(p, viewAngleMat);
+	return mmul(p, viewAngleMat) + viewPos;
 }
 
 Point2D DrawContext::ReverseTransform(Point2D p) {

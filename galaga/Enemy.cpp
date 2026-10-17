@@ -203,6 +203,7 @@ bool Enemy2::Attack(CMPUT350::GameContext* context, const CMPUT350::Point2D &tar
 		{pos.x + 700.f, pos.y + 1100.f},
 		mStopPosition
 	};
+	Shoot(context);
 	t = 0.0f;
 	return true;
 }
@@ -216,7 +217,7 @@ void Enemy2::RenderForeground(CMPUT350::GameContext *context){
 //Enemy 3
 void Enemy3::Initialize(CMPUT350::GameContext* context){
 	Enemy::Initialize(context);
-	
+
 	mLives = 3;
 }
 
@@ -235,6 +236,7 @@ bool Enemy3::Attack(CMPUT350::GameContext* context, const CMPUT350::Point2D &tar
 		{target.x - 200.f, target.y + 200.f},
 		mStopPosition
     };
+	Shoot(context);
 	t = 0.0f;
 	return true;
 }

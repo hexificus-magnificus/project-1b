@@ -71,7 +71,7 @@ void Player::Update(CMPUT350::GameContext* context)
 
 void Player::LateUpdate(CMPUT350::GameContext* context)
 {
-    if (needDie) {
+    if (needDie && mAlive) {
         context->mNotificationManager->Notify("PlayerDead");
         Kill();
     }

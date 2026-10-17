@@ -1,5 +1,6 @@
 #include "Bullet.h"
 #include "Player.h"
+#include "Enemy.h"
 
 Bullet::Bullet(CMPUT350::Point2D location, CMPUT350::Point2D heading, bool player)
 {
@@ -26,7 +27,6 @@ void Bullet::Initialize(CMPUT350::GameContext* context)
 
 void Bullet::Update(CMPUT350::GameContext* context)
 {
-    
     mPreviousLocation = mLocation;
     mLocation += mHeading; 
     mBounds.topLeft = mPreviousLocation;
@@ -66,12 +66,14 @@ void Bullet::CollisionEnter(const std::shared_ptr<CMPUT350::CollisionObject>& ob
 {
     //inspiration for code from: https://stackoverflow.com/a/351865
 
-    Player* player = dynamic_cast<Player*>(obj.get());
+    auto player = std::dynamic_pointer_cast<Player>(obj);
+    auto enemy = std::dynamic_pointer_cast<Enemy>(obj);
 
-    if (player != nullptr && IsPlayerBullet()){
-        return;
+    if (IsPlayerBullet() && enemy){
+        Kill();
+    }else if(!IsPlayerBullet() && player){
+        Kill();
     }
-    Kill();
 }
 
 void Bullet::Kill()

@@ -37,8 +37,12 @@ public:
 	float t = 0.0f;
 	CMPUT350::Point2D mStopPosition;
 	int mLives;
+	CMPUT350::RGBColor darkColor = CMPUT350::Colors::red;
+	CMPUT350::RGBColor mediumColor =CMPUT350::Colors::red;
+	CMPUT350::RGBColor lightColor = CMPUT350::Colors::red;
 	CMPUT350::RGBColor color = CMPUT350::Colors::red;
 	void Shoot(CMPUT350::GameContext* context);
+
 
 private:
 	CMPUT350::Rect bounds;
@@ -52,32 +56,46 @@ private:
 class Enemy1 : public Enemy {
 public:
 	Enemy1(CMPUT350::Point2D loc, const std::vector<CMPUT350::Point2D> &path, CMPUT350::Point2D stopPosition)
-	:Enemy(loc, path, stopPosition){}
+	:Enemy(loc, path, stopPosition){
+		lightColor = CMPUT350::Colors::red;
+		color = lightColor;
+	}
 	void Initialize(CMPUT350::GameContext *context) override;
 	void LateUpdate(CMPUT350::GameContext *context) override;
 	bool Attack(CMPUT350::GameContext *context, const CMPUT350::Point2D &target) override;
 	void RenderForeground(CMPUT350::GameContext *context) override;
+	
 
 };
 
 class Enemy2 : public Enemy {
 public:
 	Enemy2(CMPUT350::Point2D loc, const std::vector<CMPUT350::Point2D> &path, CMPUT350::Point2D stopPosition)
-	:Enemy(loc, path, stopPosition){}
+	:Enemy(loc, path, stopPosition){
+		mediumColor = CMPUT350::Colors::mediumGreen;
+		lightColor = CMPUT350::Colors::lightGreen;
+		color = mediumColor;
+	}
 	void Initialize(CMPUT350::GameContext *context) override;
 	void LateUpdate(CMPUT350::GameContext *context) override;
 	bool Attack(CMPUT350::GameContext *context, const CMPUT350::Point2D &target) override;
 	void RenderForeground(CMPUT350::GameContext *context) override;
+	
 };
 
 class Enemy3 : public Enemy {
 public:
 	Enemy3(CMPUT350::Point2D loc, const std::vector<CMPUT350::Point2D> &path, CMPUT350::Point2D stopPosition)
-	:Enemy(loc, path, stopPosition){}
+	:Enemy(loc, path, stopPosition){
+		darkColor = CMPUT350::Colors::darkBlue;
+		mediumColor = CMPUT350::Colors::mediumBlue;
+		lightColor = CMPUT350::Colors::lightBlue;
+	}
 	void Initialize(CMPUT350::GameContext *context) override;
 	void LateUpdate(CMPUT350::GameContext *context) override;
 	bool Attack(CMPUT350::GameContext *context, const CMPUT350::Point2D &target) override;
 	void RenderForeground(CMPUT350::GameContext *context) override;
+	
 };
 
 #endif

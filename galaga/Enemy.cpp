@@ -28,7 +28,7 @@ void Enemy::Update(CMPUT350::GameContext* context)
             rotation = 0.0f;
         }
 	}
-	bounds = CMPUT350::Rect(pos.x-20.0f, pos.y -20.f, 40.f, 40.f);
+	bounds = CMPUT350::Rect(pos.x - 20.f, pos.y - 20.f, 40.f, 40.f);
 	mShapes[0] = CMPUT350::Shape(bounds);
 }
 
@@ -52,10 +52,17 @@ void Enemy::CollisionEnter(const std::shared_ptr<CMPUT350::CollisionObject>& obj
 	auto bullet = std::dynamic_pointer_cast<Bullet>(obj); 
 	auto player = std::dynamic_pointer_cast<Player>(obj);
 
-	if (bullet&& bullet->IsPlayerBullet()) {
+	if (bullet&& bullet->IsPlayerBullet() && bullet->IsAlive()) {
 		// both Enemy and Bullet are already axis-aligned rectangles, so no need to check further
 		mLives--;
-		if (mLives ==0){
+		if (mLives ==1){
+			color = lightColor;
+		}else if (mLives == 2){
+			color = mediumColor;
+		}else if (mLives == 3){
+			color = darkColor;
+		}
+		else if (mLives <=0){
 			Kill();	
 		}
 		

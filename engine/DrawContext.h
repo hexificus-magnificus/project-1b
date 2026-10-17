@@ -26,6 +26,13 @@ const RGBColor white(255, 255, 255);
 const RGBColor black(0, 0, 0);
 const RGBColor gray(100, 100, 100);
 const RGBColor grey(200, 200, 200);
+const RGBColor lightGreen(144, 238, 144);
+const RGBColor mediumGreen(50, 205, 50);
+const RGBColor darkGreen(0, 100, 0);
+const RGBColor lightBlue(135, 206, 250);
+const RGBColor mediumBlue(30, 144, 255);
+const RGBColor darkBlue(0, 0, 139);
+
 
 }  // namespace Colors
 

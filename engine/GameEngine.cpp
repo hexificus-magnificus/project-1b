@@ -148,11 +148,11 @@ void GameEngine::Run() {
 			}
 		}
 
-
+		/*
 		ctx->ScreenContext->ResetView();
 		for (auto obj : gameObjects) {
 			obj->RenderUI(ctx);
-		}
+		}*/
 
         // Actually render to window
 		mWindow->display();

@@ -157,6 +157,15 @@ void Player::RenderForeground(CMPUT350::GameContext* context)
     DrawShip(context->ScreenContext, {0, 0});
 }
 
+void Player::Hit() {
+    if (mActive) {
+        mActive = false;
+        if (--mLives < 0) {
+            needDie = true;
+        }
+    }
+}
+
 /**
 * @brief Handles collisions with other collision objects
 */ 
@@ -167,16 +176,10 @@ void Player::CollisionEnter(const std::shared_ptr<CMPUT350::CollisionObject>& ob
     Enemy* enemy = dynamic_cast<Enemy*>(obj.get());
     if (bullet != nullptr){
         if (!bullet->IsPlayerBullet()){
-            mActive = false;
-            if (--mLives < 0) {
-                needDie = true;
-            }
+            Hit();
         }
     }if (enemy != nullptr){
-        mActive = false;
-        if (--mLives <0){
-            needDie = true;
-        }
+        Hit();
     }
 }
 

@@ -28,6 +28,8 @@ private:
     
     void DrawShip(CMPUT350::DrawContext *ctx, CMPUT350::Point2D p);
 
+    void Hit();
+
 public:
     Player(CMPUT350::Point2D loc);
 

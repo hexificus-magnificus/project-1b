@@ -31,7 +31,6 @@ void Galaga::SetState(GameState s) {
         wave = 0;
     }
     if (s == GameState::waveEnter) {
-        std::cout << "waveEnter\n";
         ++wave;
         ++*waveCtr;
         numEnemies = 0;
@@ -39,7 +38,6 @@ void Galaga::SetState(GameState s) {
         attackTimer = 0;
         waveTimer = 0;
         player->canEnter = false;
-        std::cout << "done waveEnter";
     }
     if (s == GameState::play) {
         player->canEnter = true;
@@ -169,7 +167,6 @@ void Galaga::Update(CMPUT350::GameContext *context) {
         case GameState::waveEnter:
             spawnTimer++;
             if (spawnTimer >= 20 && numEnemies<8){
-                std::cout << "spawning enemy\n";
                 //ChatGPT help with the next three lines
                 auto enemy = SpawnEnemy(context, numEnemies);
                 enemies.push_back(enemy);
@@ -220,8 +217,7 @@ void Galaga::Update(CMPUT350::GameContext *context) {
                         enemies[attacker]->Attack(
                             context, player->GetLocation())) {
 
-                        std::cout << "Enemy " << attacker
-                                << " attacks!" << std::endl;
+                        
 
                         nextAttacker = (attacker + 1) % enemies.size();
                         break;
@@ -270,7 +266,7 @@ void Galaga::ReceiveNotification(const std::string& key){
         }
     }
     if (key == "PlayerDead") {
-        std::cout << "player died\n";
+
         SetState(GameState::gameOver);
     }else if(key=="Score50"||key=="Score100"||key=="Score200"){
         int points = std::stoi(key.substr(5)); //ChatGPT for std::stoi(message.substr(5))

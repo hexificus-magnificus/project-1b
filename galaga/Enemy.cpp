@@ -15,23 +15,58 @@ void Enemy::Initialize(CMPUT350::GameContext* context)
 }
 
 void Enemy::Update(CMPUT350::GameContext* context)
-{	
-	float dt = clock.restart().asMicroseconds() / 1000000.;
-	if (t<1.0f){
-		pos = CMPUT350::Bezier::GetPoint(mPath, t);
-		CMPUT350::Point2D slope = CMPUT350::Bezier::GetSlope(mPath, t);
+// function debugged with ChatGPT
+{
+    float dt = clock.restart().asSeconds();
+
+    if (t < 1.0f) {
+    	pos = CMPUT350::Bezier::GetPoint(mPath, t);
+
+    	CMPUT350::Point2D slope =
+        CMPUT350::Bezier::GetSlope(mPath, t);
+
 		rotation = CMPUT350::Bezier::GetRotation(slope, t);
-		t = std::min(1.0f, t + (1.f/3.f) * dt);
-	}else{
-		const double pi = 3.1415926535897932;
-		float target = pi / 2;
-		rotation = target + (rotation - target) * 0.9;
+
+		float slopeLength = std::sqrt(
+			slope.x * slope.x + slope.y * slope.y
+		);
+
+		float speed = 400.0f; // Pixels per second
+
+		if (slopeLength > 0.001f) {
+			t = std::min(1.0f, t + (speed / slopeLength) * dt); // generated with ChatGPT
+		}
+	}
+    else {
+		// function debugged with ChatGPT
+
+        // Hover left and right
+        mHoverTime += dt;
+
+        float offset = 6.0f * std::sin(mHoverTime * 2.0f);
+
+        pos.x = mStopPosition.x + offset;
+        pos.y = mStopPosition.y;
+
+        // Return to formation rotation
+        const float pi = 3.1415926535897932f;
+        float target = pi / 2;
+
+        rotation = target + (rotation - target) * 0.9f;
+
         if (std::abs(rotation - target) < 0.01f) {
             rotation = target;
         }
-	}
-	bounds = CMPUT350::Rect(pos.x - 20.f, pos.y - 20.f, 40.f, 40.f);
-	mShapes[0] = CMPUT350::Shape(bounds);
+    }
+
+    bounds = CMPUT350::Rect(
+        pos.x - 20.f,
+        pos.y - 20.f,
+        40.f,
+        40.f
+    );
+
+    mShapes[0] = CMPUT350::Shape(bounds);
 }
 
 void Enemy::LateUpdate(CMPUT350::GameContext* context)

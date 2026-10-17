@@ -44,6 +44,7 @@ public:
 	void Shoot(CMPUT350::GameContext* context);
 	int mPoints = 0;
 	int addScore = 0;
+	float mHoverTime = 0.0f; //ChatGPT debugging
 
 
 

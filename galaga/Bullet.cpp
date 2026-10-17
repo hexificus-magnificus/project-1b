@@ -94,3 +94,10 @@ const CMPUT350::Rect& Bullet::GetBounds()
 const std::vector<CMPUT350::Shape> &Bullet::GetShapes() {
     return mShapes;
 }
+
+CMPUT350::Point2D Bullet::GetLocation() const{
+    return mLocation;
+};
+float Bullet::GetRotation() const {
+    return 0;
+};

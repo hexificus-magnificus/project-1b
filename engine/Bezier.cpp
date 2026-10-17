@@ -1,4 +1,5 @@
 #include "Bezier.h"
+ 
 
 namespace CMPUT350 {
 
@@ -59,5 +60,10 @@ Point2D Bezier::GetSlope(const std::vector<Point2D> &pts, float t) {
 	x *= 3;
 	y *= 3;
 	return Point2D{x, y};
+}
+
+float Bezier::GetRotation(Point2D slope, float t){
+	float radians = std::atan2(slope.y, slope.x);
+	return radians;
 }
 }

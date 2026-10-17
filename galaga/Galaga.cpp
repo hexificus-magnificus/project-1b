@@ -21,14 +21,70 @@ void Galaga::SetState(GameState s) {
     }
     if (s == GameState::waveEnter) {
         ++wave;
+        numEnemies = 0;
+        spawnTimer = 0;
     }
     state = s;
 }
 
-std::shared_ptr<Enemy> Galaga::SpawnEnemy(CMPUT350::GameContext *context) {
-    
 
+std::shared_ptr<Enemy> Galaga::SpawnEnemy(
+    CMPUT350::GameContext* context,
+    int enemyNumber)
+{
+    CMPUT350::Point2D stopPosition;
+    std::vector<CMPUT350::Point2D> path;
+
+    float x = 170.f + enemyNumber * 60.f;
+
+    if (wave == 1) {
+        float y = 300.f + (3.5f - std::abs(enemyNumber - 3.5f)) * 25.f;
+        stopPosition = {x, y};
+
+        path = {{-10.f, -10.f},{450.f, 350.f},{600.f, 250.f},stopPosition};
+
+        return std::make_shared<Enemy1>(path[0], path, stopPosition);
+    }
+    else if (wave == 2) {
+        float offset = enemyNumber - 3.5f;
+        stopPosition = {x, 270.f + offset * offset * 7.f};
+
+        path = {{778.f, -10.f},{300.f, 350.f},{100.f, 250.f},stopPosition};
+
+        return std::make_shared<Enemy2>(path[0], path, stopPosition);
+    }
+    else if (wave == 3) {
+        // Zigzag formation, entering from top-center
+        float y = (enemyNumber % 2 == 0) ? 280.f : 340.f;
+        stopPosition = {x, y};
+
+        path = {{384.f, -10.f},{50.f, 100.f},{700.f, 500.f},stopPosition};
+
+        return std::make_shared<Enemy1>(path[0], path, stopPosition);
+    }
+    else if (wave == 4) {
+        // Diagonal formation, entering from bottom-left
+        stopPosition = {x, 250.f + enemyNumber * 20.f};
+
+        path = {{-10.f, 850.f},{100.f, 100.f},{650.f, 50.f},stopPosition};
+
+        return std::make_shared<Enemy2>(path[0], path, stopPosition);
+    }
+    else if (wave == 5) {
+        float row = static_cast<float>(enemyNumber / 4);
+        float col = static_cast<float>(enemyNumber % 4);
+
+        stopPosition = {260.f + col * 80.f,270.f + row * 90.f};
+
+        path = {{778.f, 850.f},{750.f, 50.f},{50.f, 100.f},stopPosition};
+
+        return std::make_shared<Enemy3>(path[0], path, stopPosition);
+    }
+
+    return nullptr;
 }
+
+    
 
 Galaga::Galaga() : state(GameState::menu), wave(0), scoreCtr(nullptr), waveCtr(nullptr), enemies(8) {}
 
@@ -60,21 +116,41 @@ void Galaga::Update(CMPUT350::GameContext *context) {
             SetState(GameState::waveEnter);
             break;
         case GameState::waveEnter:
-            for (int i = 0; i < 8; i++) {
-                enemies[i] = SpawnEnemy(context);
-                context->mEngineView->AddGameObject(enemies[i]);
+            spawnTimer++;
+            if (spawnTimer >= 20 && numEnemies<8){
+                enemies[numEnemies] = SpawnEnemy(context, numEnemies);
+                context->mEngineView->AddGameObject(enemies[numEnemies]);
+                spawnTimer = 0;
+                numEnemies++;
             }
-            SetState(GameState::play);
+            if (numEnemies ==8){
+                SetState(GameState::play);
+            }
+            
             break;
-        case GameState::play:
-            if (enemies.size() == 0) {
+        case GameState::play:{
+            bool enemiesDead = true;
+            bool inFormation = true;
+            for (const auto& enemy: enemies){
+                if (enemy&& enemy->IsAlive()){
+                    enemiesDead = false;
+                }if (enemy && !enemy->isInFormation()){
+                    inFormation = false;
+                }
+            }
+            if (enemiesDead) {
                 if (wave < 5) {
                     SetState(GameState::waveEnter);
                 } else {
                     SetState(GameState::menu);
                 }
+            }else if (inFormation){
+                std::cout << "All enemies are in formation!" << std::endl;
             }
             break;
+            
+            }
+            
         case GameState::gameOver:
             if (clock.getElapsedTime() > sf::seconds(5)) {
                 SetState(GameState::menu);

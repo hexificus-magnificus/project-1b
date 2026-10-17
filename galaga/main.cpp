@@ -79,7 +79,8 @@ public:
             }
         }
     }
-
+    CMPUT350::Point2D GetLocation() const override;
+    float GetRotation() const override;
     const CMPUT350::Rect& GetBounds() override
     {
         static CMPUT350::Rect bounds({0, 0}, 0, 0); // Initialize with dummy values
@@ -118,6 +119,13 @@ private:
 // would be in a C++ file
 std::random_device Ball::rd;
 std::mt19937 Ball::gen(rd());
+
+CMPUT350::Point2D Ball::GetLocation() const{
+    return mLoc;
+};
+float Ball::GetRotation() const {
+    return 0.0f;
+};
 
 int main()
 {

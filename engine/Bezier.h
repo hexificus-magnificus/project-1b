@@ -16,6 +16,7 @@ public:
 	
 	static Point2D GetPoint(const std::vector<Point2D> &pts, float t);
 	static Point2D GetSlope(const std::vector<Point2D> &pts, float t);
+	static float GetRotation(Point2D slope, float t);
 private:
     std::vector<Point2D> points;
 };

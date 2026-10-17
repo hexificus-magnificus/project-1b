@@ -21,9 +21,11 @@ class Galaga : public CMPUT350::GameObject {
     sf::Clock clock;
     int coins = 0;
     bool showCoinMessage = false;
+    int numEnemies = 0;
+    int spawnTimer =0;
 
     void SetState(GameState s);
-    std::shared_ptr<Enemy> SpawnEnemy(CMPUT350::GameContext *context);
+    std::shared_ptr<Enemy> SpawnEnemy(CMPUT350::GameContext *context, int enemyNumber);
 
 public:
     Galaga();

@@ -135,8 +135,6 @@ void DrawContext::SetContextRotation(float rotation) {
 	viewAngle = rotation;
 	viewAngleMat[0] = viewAngleMat[3] = std::cos(rotation);
 	viewAngleMat[2] = -1 * (viewAngleMat[1] = std::sin(rotation));
-	mView.setRotation(sf::radians(rotation));
-	mWindow->setView(mView);
 }
 
 void DrawContext::ResetView() {

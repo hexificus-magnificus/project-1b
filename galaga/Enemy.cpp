@@ -39,7 +39,7 @@ void Enemy::RenderForeground(CMPUT350::GameContext* context)
 {
 	if (!alive)
 		return;
-	context->ScreenContext->DrawRect(bounds, CMPUT350::Colors::red);
+	context->ScreenContext->DrawRect({{-20, -20}, {20, 20}}, CMPUT350::Colors::red);
 }
 
 void Enemy::CollisionEnter(const std::shared_ptr<CMPUT350::CollisionObject>& obj)

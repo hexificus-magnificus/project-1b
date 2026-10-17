@@ -216,6 +216,7 @@ void Enemy2::RenderForeground(CMPUT350::GameContext *context){
 //Enemy 3
 void Enemy3::Initialize(CMPUT350::GameContext* context){
 	Enemy::Initialize(context);
+	
 	mLives = 3;
 }
 

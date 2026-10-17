@@ -97,6 +97,7 @@ public:
 		mediumColor = CMPUT350::Colors::mediumBlue;
 		lightColor = CMPUT350::Colors::lightBlue;
 		mPoints = 200;
+		color = darkColor;
 	}
 	void Initialize(CMPUT350::GameContext *context) override;
 	void LateUpdate(CMPUT350::GameContext *context) override;

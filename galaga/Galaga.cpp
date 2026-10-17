@@ -5,7 +5,7 @@ void Galaga::SetState(GameState s) {
         clock.restart();
     }
     if (s == GameState::menu) {
-        if (state == GameState::gameOver) {
+        if (state == GameState::gameOver||state == GameState::play) {
             // remove score/wave counters
             scoreCtr->Kill();
             waveCtr->Kill();
@@ -18,11 +18,15 @@ void Galaga::SetState(GameState s) {
 
             scoreCtr = nullptr;
             waveCtr = nullptr;
-
-            for (int i = 0; i < enemies.size(); i++) {
-                auto tmp = std::move(enemies[i]);
-                tmp->Kill();
+            
+            //debugged with ChatGPT
+            for (auto& enemy : enemies) {
+                if (enemy) {
+                    enemy->Kill();
+                }
             }
+
+            enemies.clear();
         }
         wave = 0;
     }
@@ -33,7 +37,7 @@ void Galaga::SetState(GameState s) {
         numEnemies = 0;
         spawnTimer = 0;
         attackTimer = 0;
-        nextAttacker = 0;
+        waveTimer = 0;
         player->canEnter = false;
         std::cout << "done waveEnter";
     }
@@ -47,64 +51,88 @@ void Galaga::SetState(GameState s) {
 
 
 std::shared_ptr<Enemy> Galaga::SpawnEnemy(
+    //debugged and formatted with ChatGPT
     CMPUT350::GameContext* context,
-    int enemyNumber)
-{
-    CMPUT350::Point2D stopPosition;
-    std::vector<CMPUT350::Point2D> path;
+        int enemyNumber)
+    {
+        if (wave < 1 || wave > 5 || enemyNumber < 0 || enemyNumber >= 8) {
+            return nullptr;
+        }
 
-    float x = 170.f + enemyNumber * 60.f;
+        CMPUT350::Point2D stopPosition;
+        std::vector<CMPUT350::Point2D> path;
 
-    if (wave == 1) {
-        float y = 300.f + (3.5f - std::abs(enemyNumber - 3.5f)) * 25.f;
+        // Separate each wave vertically
+        float x = 170.f + enemyNumber * 60.f;
+        float y = 120.f + (wave - 1) * 140.f;
+
         stopPosition = {x, y};
 
-        path = {{-10.f, -10.f},{450.f, 350.f},{600.f, 250.f},stopPosition};
+        if (wave == 1) {
+            path = {
+                {40.f + enemyNumber * 10.f, 40.f},
+                {180.f, 280.f},
+                {550.f, 230.f},
+                stopPosition
+            };
 
-        return std::make_shared<Enemy1>(path[0], path, stopPosition);
+            return std::make_shared<Enemy1>(
+                path[0], path, stopPosition
+            );
+        }
+        else if (wave == 2) {
+            path = {
+                {728.f - enemyNumber * 10.f, 40.f},
+                {580.f, 320.f},
+                {180.f, 220.f},
+                stopPosition
+            };
+
+            return std::make_shared<Enemy2>(
+                path[0], path, stopPosition
+            );
+        }
+        else if (wave == 3) {
+            path = {
+                {340.f + enemyNumber * 12.f, 40.f},
+                {140.f, 160.f},
+                {620.f, 480.f},
+                stopPosition
+            };
+
+            return std::make_shared<Enemy1>(
+                path[0], path, stopPosition
+            );
+        }
+        else if (wave == 4) {
+            path = {
+                {40.f + enemyNumber * 8.f, 720.f},
+                {180.f, 260.f},
+                {570.f, 150.f},
+                stopPosition
+            };
+
+            return std::make_shared<Enemy2>(
+                path[0], path, stopPosition
+            );
+        }
+        else if (wave == 5) {
+            path = {
+                {728.f - enemyNumber * 8.f, 720.f},
+                {600.f, 250.f},
+                {160.f, 150.f},
+                stopPosition
+            };
+
+            return std::make_shared<Enemy3>(
+                path[0], path, stopPosition
+            );
+        }
+
+        return nullptr;
     }
-    else if (wave == 2) {
-        float offset = enemyNumber - 3.5f;
-        stopPosition = {x, 270.f + offset * offset * 7.f};
 
-        path = {{778.f, -10.f},{300.f, 350.f},{100.f, 250.f},stopPosition};
-
-        return std::make_shared<Enemy2>(path[0], path, stopPosition);
-    }
-    else if (wave == 3) {
-        // Zigzag formation, entering from top-center
-        float y = (enemyNumber % 2 == 0) ? 280.f : 340.f;
-        stopPosition = {x, y};
-
-        path = {{384.f, -10.f},{50.f, 100.f},{700.f, 500.f},stopPosition};
-
-        return std::make_shared<Enemy1>(path[0], path, stopPosition);
-    }
-    else if (wave == 4) {
-        // Diagonal formation, entering from bottom-left
-        stopPosition = {x, 250.f + enemyNumber * 20.f};
-
-        path = {{-10.f, 850.f},{100.f, 100.f},{650.f, 50.f},stopPosition};
-
-        return std::make_shared<Enemy2>(path[0], path, stopPosition);
-    }
-    else if (wave == 5) {
-        float row = static_cast<float>(enemyNumber / 4);
-        float col = static_cast<float>(enemyNumber % 4);
-
-        stopPosition = {260.f + col * 80.f,270.f + row * 90.f};
-
-        path = {{778.f, 850.f},{750.f, 50.f},{50.f, 100.f},stopPosition};
-
-        return std::make_shared<Enemy3>(path[0], path, stopPosition);
-    }
-
-    return nullptr;
-}
-
-    
-
-Galaga::Galaga() : state(GameState::menu), wave(0), scoreCtr(nullptr), waveCtr(nullptr), enemies(8) {}
+Galaga::Galaga() : state(GameState::menu), wave(0), scoreCtr(nullptr), waveCtr(nullptr), enemies() {}
 
 void Galaga::Initialize(CMPUT350::GameContext *context) {
     clock.reset();
@@ -125,6 +153,7 @@ void Galaga::Initialize(CMPUT350::GameContext *context) {
 }
 
 void Galaga::Update(CMPUT350::GameContext *context) {
+    waveTimer++;
     switch (state) {
         case GameState::menu:
             break;
@@ -141,8 +170,10 @@ void Galaga::Update(CMPUT350::GameContext *context) {
             spawnTimer++;
             if (spawnTimer >= 20 && numEnemies<8){
                 std::cout << "spawning enemy\n";
-                enemies[numEnemies] = SpawnEnemy(context, numEnemies);
-                context->mEngineView->AddGameObject(enemies[numEnemies]);
+                //ChatGPT help with the next three lines
+                auto enemy = SpawnEnemy(context, numEnemies);
+                enemies.push_back(enemy);
+                context->mEngineView->AddGameObject(enemy);
                 spawnTimer = 0;
                 numEnemies++;
             }
@@ -151,42 +182,55 @@ void Galaga::Update(CMPUT350::GameContext *context) {
             }
             
             break;
-        case GameState::play:{
+        case GameState::play: {
+            //debugged with ChatGPT
             bool enemiesDead = true;
-            bool inFormation = true;
-            for (const auto& enemy: enemies){
-                if (enemy&& enemy->IsAlive()){
+
+            for (const auto& enemy : enemies) {
+                if (enemy && enemy->IsAlive()) {
                     enemiesDead = false;
-                }if (enemy && enemy->IsAlive() && !enemy->isInFormation()){
-                    inFormation = false;
+                    break;
                 }
             }
-            if (enemiesDead) {
-                if (wave < 5) {
-                    SetState(GameState::waveEnter);
-                } else {
-                    SetState(GameState::menu);
-                }
-            }else if (inFormation){
-                attackTimer++;
-                if (attackTimer >= 30){
-                    attackTimer = 0;
-                
-                    for (int i = 0; i<enemies.size(); i++){
-                        int attacker = (nextAttacker+i)%enemies.size();
-                        if (enemies[attacker] && enemies[attacker]->IsAlive() &&enemies[attacker]->Attack(context, player->GetLocation())){
-                            std::cout << "Enemy " << attacker << " attacks!" << std::endl;
-                            nextAttacker = (attacker + 1) % enemies.size();
 
-                            break;
+            // Start the next wave after 360 frames,
+            if (wave < 5 && waveTimer >= 360) {
+                SetState(GameState::waveEnter);
+                break;
+            }
+
+            // After wave 5, finish only when all enemies are dead.
+            if (wave == 5 && enemiesDead) {
+                SetState(GameState::menu);
+                break;
+            }
+
+            // Keep attacking with enemies from ALL waves.
+            attackTimer++;
+
+            if (attackTimer >= 30) {
+                attackTimer = 0;
+
+                for (int i = 0; i < enemies.size(); i++) {
+                    int attacker = (nextAttacker + i) % enemies.size();
+
+                    if (enemies[attacker] &&
+                        enemies[attacker]->IsAlive() &&
+                        enemies[attacker]->isInFormation() &&
+                        enemies[attacker]->Attack(
+                            context, player->GetLocation())) {
+
+                        std::cout << "Enemy " << attacker
+                                << " attacks!" << std::endl;
+
+                        nextAttacker = (attacker + 1) % enemies.size();
+                        break;
                     }
                 }
             }
-                
-            }
+
             break;
-            
-            }
+        }
             
         case GameState::gameOver:
             if (clock.getElapsedTime() > sf::seconds(5)) {

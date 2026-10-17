@@ -15,6 +15,7 @@ enum class GameState {
 class Galaga : public CMPUT350::GameObject {
     GameState state;
     int wave;
+    std::shared_ptr<Player> player;
     std::vector<std::shared_ptr<Enemy>> enemies;
     std::shared_ptr<UICounter> scoreCtr;
     std::shared_ptr<UICounter> waveCtr;

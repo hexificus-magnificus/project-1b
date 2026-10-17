@@ -16,10 +16,11 @@ void Enemy::Initialize(CMPUT350::GameContext* context)
 void Enemy::Update(CMPUT350::GameContext* context)
 {
 	if (t<1.0f){
+		float dt = clock.restart().asMicroseconds() / 1000000.;
 		pos = CMPUT350::Bezier::GetPoint(mPath, t);
 		CMPUT350::Point2D slope = CMPUT350::Bezier::GetSlope(mPath, t);
 		rotation = CMPUT350::Bezier::GetRotation(slope, t);
-		t = std::min(1.0f, t + 0.01f);
+		t = std::min(1.0f, t + (1.f/3.f) * dt);
 	}else{
 		rotation *= 0.9f;
         if (std::abs(rotation) < 0.01f) {

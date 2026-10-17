@@ -95,8 +95,6 @@ std::shared_ptr<Enemy> Galaga::SpawnEnemy(
     return nullptr;
 }
 
-    
-
 Galaga::Galaga() : state(GameState::menu), wave(0), scoreCtr(nullptr), waveCtr(nullptr), enemies(8) {}
 
 void Galaga::Initialize(CMPUT350::GameContext *context) {

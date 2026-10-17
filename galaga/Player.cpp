@@ -31,6 +31,7 @@ void Player::Update(CMPUT350::GameContext* context)
     if (!mActive) {
         if (canEnter) {
             mLocation = mSpawn;
+            mBounds.topLeft = mLocation - (mSize/2);
             mActive = true;
         } else {
             return;

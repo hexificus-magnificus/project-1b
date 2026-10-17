@@ -6,6 +6,8 @@
 
 #include "GraphicsObject.h"
 #include "MathUtil.h"
+#include "DrawContext.h"
+#include "GameContext.h"
 
 namespace CMPUT350 {
 
@@ -139,6 +141,22 @@ public:
     }
     virtual const Rect &GetBounds() = 0;
     virtual const std::vector<Shape> &GetShapes() = 0;
+
+    void RenderBounds(GameContext *contextrender) {
+        for (Shape s : GetShapes()) {
+            switch (s.t) {
+                case ShapeType::kCircle:
+                    contextrender->GUIContext->DrawCircle(s.shape.circle.center, s.shape.circle.radius, Colors::cyan);
+                    break;
+                case ShapeType::kLine:
+                    contextrender->GUIContext->DrawLine(s.shape.line.p1, s.shape.line.p2, 5, Colors::cyan);
+                    break;
+                case ShapeType::kRect:
+                    contextrender->GUIContext->DrawRect(s.shape.rect, Colors::cyan);
+                    break;
+            }
+        }
+    }
 };
 
 }  // namespace CMPUT350

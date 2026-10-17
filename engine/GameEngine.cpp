@@ -133,6 +133,12 @@ void GameEngine::Run() {
 			}
 		}
 
+		for (auto obj : gameObjects) {
+			if (auto o = std::dynamic_pointer_cast<CollisionObject>(obj)) {
+				o->RenderBounds(ctx);
+			}
+		}
+
         // 7. Render foreground
 		for (auto obj : gameObjects) {
 			if (auto gObj = IsGraphicsObject(obj)) {

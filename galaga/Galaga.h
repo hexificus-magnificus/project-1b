@@ -26,6 +26,7 @@ class Galaga : public CMPUT350::GameObject {
 
     int attackTimer = 0;
     int nextAttacker = 0;
+    std::shared_ptr<Player> player;
 
     void SetState(GameState s);
     std::shared_ptr<Enemy> SpawnEnemy(CMPUT350::GameContext *context, int enemyNumber);

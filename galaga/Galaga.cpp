@@ -112,8 +112,10 @@ void Galaga::Update(CMPUT350::GameContext *context) {
             break;
         case GameState::startup:
             scoreCtr = std::make_shared<UICounter>("Score: %d", 0, CMPUT350::Point2D(10, 10));
-            waveCtr = std::make_shared<UICounter>("Wave: %d", 1, CMPUT350::Point2D(10, 870));
-            context->mEngineView->AddGameObject(std::make_shared<Player>(CMPUT350::Point2D(768 / 2, 900)));
+            waveCtr = std::make_shared<UICounter>("Wave: %d", 0, CMPUT350::Point2D(10, 870));
+            player = std::make_shared<Player>(CMPUT350::Point2D(768 / 2, 900)); //ChatGPT: The idea to create a pointer to the player
+            context->mEngineView->AddGameObject(player);
+
             context->mEngineView->AddGameObject(scoreCtr);
             context->mEngineView->AddGameObject(waveCtr);
             SetState(GameState::waveEnter);
@@ -137,7 +139,7 @@ void Galaga::Update(CMPUT350::GameContext *context) {
             for (const auto& enemy: enemies){
                 if (enemy&& enemy->IsAlive()){
                     enemiesDead = false;
-                }if (enemy && !enemy->isInFormation()){
+                }if (enemy && enemy->IsAlive() && !enemy->isInFormation()){
                     inFormation = false;
                 }
             }
@@ -149,17 +151,19 @@ void Galaga::Update(CMPUT350::GameContext *context) {
                 }
             }else if (inFormation){
                 attackTimer++;
-                if (attackTimer >= 120){
+                if (attackTimer >= 10){
                     attackTimer = 0;
-                }
+                
                 for (int i = 0; i<enemies.size(); i++){
                     int attacker = (nextAttacker+i)%enemies.size();
-                    if (enemies[attacker] && enemies[attacker]->IsAlive()){
+                    if (enemies[attacker] && enemies[attacker]->IsAlive() &&enemies[attacker]->Attack(context, player->GetLocation())){
                         std::cout << "Enemy " << attacker << " attacks!" << std::endl;
-                        nextAttacker = (attacker + i) % enemies.size();
+                        nextAttacker = (attacker + 1) % enemies.size();
+
                         break;
                     }
                 }
+            }
                 
             }
             break;

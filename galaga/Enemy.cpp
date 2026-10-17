@@ -102,7 +102,7 @@ bool Enemy1::Attack(CMPUT350::GameContext* context, const CMPUT350::Point2D &tar
         pos,
         {pos.x + 150.f, pos.y + 100.f},
         {target.x + 100.f, target.y - 200.f},
-        {target.x, target.y - 80.f}
+        mStopPosition
     };
 	t = 0.0f;
 	return true;

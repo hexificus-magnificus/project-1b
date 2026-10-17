@@ -33,16 +33,14 @@ public:
 	std::vector<CMPUT350::Point2D> mPath;
 	CMPUT350::Point2D pos;
 	float t = 0.0f;
-
+	CMPUT350::Point2D mStopPosition;
 private:
 	CMPUT350::Rect bounds;
     std::vector<CMPUT350::Shape> mShapes;
 	bool alive;
     CMPUT350::Point2D mStartPos;
     float rotation = 0.0f;
-	CMPUT350::Point2D mStopPosition;
 	
-
 };
 
 class Enemy1 : public Enemy {

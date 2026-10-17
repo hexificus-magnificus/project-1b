@@ -23,6 +23,8 @@ void Galaga::SetState(GameState s) {
         ++wave;
         numEnemies = 0;
         spawnTimer = 0;
+        attackTimer = 0;
+        nextAttacker = 0;
     }
     state = s;
 }
@@ -145,7 +147,19 @@ void Galaga::Update(CMPUT350::GameContext *context) {
                     SetState(GameState::menu);
                 }
             }else if (inFormation){
-                std::cout << "All enemies are in formation!" << std::endl;
+                attackTimer++;
+                if (attackTimer >= 120){
+                    attackTimer = 0;
+                }
+                for (int i = 0; i<enemies.size(); i++){
+                    int attacker = (nextAttacker+i)%enemies.size();
+                    if (enemies[attacker] && enemies[attacker]->IsAlive()){
+                        std::cout << "Enemy " << attacker << " attacks!" << std::endl;
+                        nextAttacker = (attacker + i) % enemies.size();
+                        break;
+                    }
+                }
+                
             }
             break;
             

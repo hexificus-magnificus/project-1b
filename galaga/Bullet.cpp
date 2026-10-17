@@ -57,7 +57,17 @@ void Bullet::RenderBackground(CMPUT350::GameContext* context)
 
 void Bullet::RenderForeground(CMPUT350::GameContext* context)
 {
-    context->ScreenContext->FrameRect(mBounds,1,CMPUT350::Colors::yellow);
+    //context->ScreenContext->FrameRect(mBounds,1,CMPUT350::Colors::yellow);
+    CMPUT350::Rect localBounds = mBounds;
+
+    localBounds.topLeft.x -= mLocation.x;
+    localBounds.topLeft.y -= mLocation.y;
+
+    context->ScreenContext->FrameRect(
+        localBounds,
+        1,
+        CMPUT350::Colors::yellow
+    );
 }
 
 void Bullet::CollisionEnter(const std::shared_ptr<CMPUT350::CollisionObject>& obj)

@@ -28,6 +28,8 @@ GameEngine::~GameEngine() {
     // Cleanup resources
     mWindow->close();
     delete ctx->ScreenContext;
+	delete ctx->GUIContext;
+
 	delete ctx;
     // do shared_ptrs get destroyed with the object?
     // i'm worried they won't decrement the ctrl block here
@@ -139,6 +141,7 @@ void GameEngine::Run() {
 				gObj->RenderForeground(ctx);
 			}
 		}
+
 
 		ctx->ScreenContext->ResetView();
 		for (auto obj : gameObjects) {

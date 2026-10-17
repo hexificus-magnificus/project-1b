@@ -30,16 +30,15 @@ public:
     const CMPUT350::Rect& GetBounds() override;
     const std::vector<CMPUT350::Shape> &GetShapes() override;
 	bool isInFormation() const;
-
+	std::vector<CMPUT350::Point2D> mPath;
+	CMPUT350::Point2D pos;
+	float t = 0.0f;
 
 private:
-	CMPUT350::Point2D pos;
 	CMPUT350::Rect bounds;
     std::vector<CMPUT350::Shape> mShapes;
 	bool alive;
-    float t = 0.0f;
     CMPUT350::Point2D mStartPos;
-    std::vector<CMPUT350::Point2D> mPath;
     float rotation = 0.0f;
 	CMPUT350::Point2D mStopPosition;
 	

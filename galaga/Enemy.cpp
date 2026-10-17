@@ -19,9 +19,12 @@ void Enemy::Update(CMPUT350::GameContext* context)
 		pos = CMPUT350::Bezier::GetPoint(mPath, t);
 		CMPUT350::Point2D slope = CMPUT350::Bezier::GetSlope(mPath, t);
 		rotation = CMPUT350::Bezier::GetRotation(slope, t);
-		t += 0.01f;
+		t = std::min(1.0f, t + 0.01f);
 	}else{
-		rotation = 0.0f;
+		rotation *= 0.9f;
+        if (std::abs(rotation) < 0.01f) {
+            rotation = 0.0f;
+        }
 	}
 	bounds = CMPUT350::Rect(pos.x-20.0f, pos.y -20.f, 40.f, 40.f);
 	mShapes[0] = CMPUT350::Shape(bounds);
@@ -39,7 +42,7 @@ void Enemy::RenderForeground(CMPUT350::GameContext* context)
 {
 	if (!alive)
 		return;
-	context->ScreenContext->DrawRect(bounds, CMPUT350::Colors::red);
+	context->ScreenContext->DrawRect({-20.f, -20.f, 40.f, 40.f}, CMPUT350::Colors::red);
 }
 
 void Enemy::CollisionEnter(const std::shared_ptr<CMPUT350::CollisionObject>& obj)
@@ -91,7 +94,18 @@ void Enemy1::LateUpdate(CMPUT350::GameContext* context){
 }
 
 bool Enemy1::Attack(CMPUT350::GameContext* context, const CMPUT350::Point2D &target){
-	return false;
+	if (!isInFormation()){
+		return false;
+	}
+
+	mPath = {
+        pos,
+        {pos.x + 150.f, pos.y + 100.f},
+        {target.x + 100.f, target.y - 200.f},
+        {target.x, target.y - 80.f}
+    };
+	t = 0.0f;
+	return true;
 }
 
 void Enemy1::RenderForeground(CMPUT350::GameContext *context){

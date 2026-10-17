@@ -6,6 +6,8 @@ game loop, which includes drawing, object updates/collisions,
 and event/input handling. The notification install methods
 were slightly modified so that their int parameter is used
 to take the key to register, when before it was unused.
+Stores GameObjects in a std::vector, and operations on objects
+within the class are only done via this vector.
 Implemented By:
 - main loop: John
 - notification passing: Kelsey
@@ -15,6 +17,21 @@ As per the project description, provides utilities for working
 with shapes. Our implementation adds some Rect methods for
 getting arrays of the corners/sides and center. Also includes
 Bezier curves, both position and slope.
+Supported Shapes are: Point, Rect, Line, Circle
+A Rect is defined as a topLeft point with height and width since
+it is convenient to work with and pass to SFML.
+Rect Operations: translate, resize, intersection with another Rect,
+    union with another rect, finding the smallest rect containing
+    one Rect and another shape, inset
+A Circle is a center and radius, since this is the most natural
+way to think about circles.
+Circle Operations: none, make a new one
+A line is defined by 2 endpoints
+Line Operations: none
+Line helpers exist to get intersection with another line, line
+length, and the closest point on the line to another point
+Point2D supports all basic arithmetic with other points and
+also scalar values
 Implemented By:
 - MathUtil.h: Kelsey
 - Bezier.h: John
@@ -22,7 +39,8 @@ Implemented By:
 NotificationManager:
 Maintains an unordered_map of objects registered to each
 notification, then notifies them when it recieves a notification.
-Also nothing extra.
+Also nothing extra. A notification is a string, commonly a literal
+that maps to a std::vector<GameObject>
 Implemented By: Kelsey
 
 DrawContext:

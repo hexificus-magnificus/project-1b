@@ -21,6 +21,7 @@ namespace CMPUT350 {
     }
 
     void NotificationManager::Notify(const std::string& message){
+        Clean();
         for (auto i= mListeners[message].begin(); i!= mListeners[message].end(); ){
             std::shared_ptr<GameObject> objectToNotify = i->lock(); 
             if (objectToNotify){
@@ -29,6 +30,19 @@ namespace CMPUT350 {
             }else{
                 i = mListeners[message].erase(i);
             }
+        }
+    }
+
+    void NotificationManager::Clean() {
+        for (auto i = mListeners.begin(); i != mListeners.end(); i++) {
+            auto objs = i->second;
+            std::vector<std::weak_ptr<GameObject>> updated;
+            for (auto obj : objs) {
+                if (!obj.expired()) {
+                    updated.push_back(obj);
+                }
+            }
+            std::swap(mListeners[i->first], updated);
         }
     }
     

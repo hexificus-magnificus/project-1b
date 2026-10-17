@@ -68,6 +68,7 @@ void DrawContext::DrawRect(Rect r, RGBColor c) {
 	rect.setFillColor(sf::Color(c.r, c.g, c.b));
 	Point2D newP = Transform(Point2D{r.topLeft.x, r.topLeft.y});
 	rect.setPosition({newP.x, newP.y});
+	rect.setRotation(sf::radians(viewAngle));
 
 	mWindow->draw(rect);
 }

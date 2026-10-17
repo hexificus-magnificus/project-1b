@@ -100,9 +100,9 @@ bool Enemy1::Attack(CMPUT350::GameContext* context, const CMPUT350::Point2D &tar
 
 	mPath = {
         pos,
-        {pos.x + 150.f, pos.y + 100.f},
-        {target.x + 100.f, target.y - 200.f},
-        mStopPosition
+		{pos.x + 700.f, pos.y + 1100.f},
+		{pos.x - 700.f, pos.y + 1100.f},
+		mStopPosition
     };
 	t = 0.0f;
 	return true;
@@ -122,12 +122,25 @@ void Enemy2::LateUpdate(CMPUT350::GameContext* context){
 }
 
 bool Enemy2::Attack(CMPUT350::GameContext* context, const CMPUT350::Point2D &target){
-	return false;
+	if (!isInFormation()){
+		return false;
+	}
+
+	mPath = {
+        pos,
+		{pos.x - 700.f, pos.y + 1100.f},
+		{pos.x + 700.f, pos.y + 1100.f},
+		mStopPosition
+	};
+	t = 0.0f;
+	return true;
 }
 
 void Enemy2::RenderForeground(CMPUT350::GameContext *context){
 	Enemy::RenderForeground(context);
 }
+
+
 
 //Enemy 3
 void Enemy3::Initialize(CMPUT350::GameContext* context){
@@ -139,7 +152,18 @@ void Enemy3::LateUpdate(CMPUT350::GameContext* context){
 }
 
 bool Enemy3::Attack(CMPUT350::GameContext* context, const CMPUT350::Point2D &target){
-	return false;
+	if (!isInFormation()){
+		return false;
+	}
+
+	mPath = {
+        pos,
+		{pos.x + 100.f, pos.y + 1400.f},
+		{target.x - 200.f, target.y + 200.f},
+		mStopPosition
+    };
+	t = 0.0f;
+	return true;
 }
 
 void Enemy3::RenderForeground(CMPUT350::GameContext *context){

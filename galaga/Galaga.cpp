@@ -151,7 +151,7 @@ void Galaga::Update(CMPUT350::GameContext *context) {
                 }
             }else if (inFormation){
                 attackTimer++;
-                if (attackTimer >= 10){
+                if (attackTimer >= 30){
                     attackTimer = 0;
                 
                 for (int i = 0; i<enemies.size(); i++){

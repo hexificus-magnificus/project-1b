@@ -39,7 +39,7 @@ Implemented By:
 NotificationManager:
 Maintains an unordered_map of objects registered to each
 notification, then notifies them when it recieves a notification.
-Also nothing extra. A notification is a string, commonly a literal
+Also nothing extra. A notification is a string (commonly a literal)
 that maps to a std::vector<GameObject>
 Implemented By: Kelsey
 

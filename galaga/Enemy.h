@@ -40,7 +40,9 @@ private:
 	bool alive;
     CMPUT350::Point2D mStartPos;
     float rotation = 0.0f;
+	CMPUT350::Point2D mStopPosition;
 	
+	sf::Clock clock;
 };
 
 class Enemy1 : public Enemy {

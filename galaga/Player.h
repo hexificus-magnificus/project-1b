@@ -8,6 +8,7 @@ class Player : public CMPUT350::CollisionObject
 {
 private:
     CMPUT350::Point2D mLocation;
+    CMPUT350::Point2D mSpawn;
     CMPUT350::Rect mBounds;
     std::vector<CMPUT350::Shape> mShapes;
     int mSize = 40;
@@ -16,12 +17,16 @@ private:
     bool mMoveLeft;
     bool mMoveRight;
     bool mShoot;
+    bool mActive;
+    int mLives;
 
     std::weak_ptr<Bullet> bullet1;
     std::weak_ptr<Bullet> bullet2;
     
     sf::Clock clock;
     
+    void DrawShip(CMPUT350::DrawContext *ctx, CMPUT350::Point2D p);
+
 public:
     Player(CMPUT350::Point2D loc);
 
@@ -32,6 +37,7 @@ public:
     bool IsAlive() const override;
     void Kill() override;
     void ReceiveNotification(const std::string& key) override;
+    void RenderUI(CMPUT350::GameContext *context) override;
 
     // Graphics Object Functions
     void RenderBackground(CMPUT350::GameContext* context) override;
@@ -45,6 +51,7 @@ public:
     CMPUT350::Point2D GetLocation() const override;
     float GetRotation() const override;
 
+    bool canEnter;
 };
 
 #endif

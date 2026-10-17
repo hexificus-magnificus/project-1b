@@ -20,12 +20,20 @@ void Galaga::SetState(GameState s) {
         wave = 0;
     }
     if (s == GameState::waveEnter) {
+        std::cout << "waveEnter\n";
         ++wave;
         ++*waveCtr;
         numEnemies = 0;
         spawnTimer = 0;
         attackTimer = 0;
         nextAttacker = 0;
+        player->canEnter = false;
+        std::cout << "done waveEnter";
+    }
+    if (s == GameState::play) {
+        player->canEnter = true;
+    }
+    if (s == GameState::startup) {
     }
     state = s;
 }
@@ -103,7 +111,6 @@ void Galaga::Initialize(CMPUT350::GameContext *context) {
     context->mEngineView->InstallKeyUpNotification(static_cast<int>(sf::Keyboard::Key::D), "MoveRightStop");
     context->mNotificationManager->Register(context->CurrObject, "InsertCoins");
     context->mNotificationManager->Register(context->CurrObject, "StartGame");
-    
 }
 
 void Galaga::Update(CMPUT350::GameContext *context) {
@@ -112,10 +119,9 @@ void Galaga::Update(CMPUT350::GameContext *context) {
             break;
         case GameState::startup:
             scoreCtr = std::make_shared<UICounter>("Score: %d", 0, CMPUT350::Point2D(10, 10));
-            waveCtr = std::make_shared<UICounter>("Wave: %d", 0, CMPUT350::Point2D(10, 870));
-            player = std::make_shared<Player>(CMPUT350::Point2D(768 / 2, 900)); //ChatGPT: The idea to create a pointer to the player
+            waveCtr = std::make_shared<UICounter>("Wave: %d", 0, CMPUT350::Point2D(10, 900));
+            player = std::make_shared<Player>(CMPUT350::Point2D(768 / 2, 900));
             context->mEngineView->AddGameObject(player);
-
             context->mEngineView->AddGameObject(scoreCtr);
             context->mEngineView->AddGameObject(waveCtr);
             SetState(GameState::waveEnter);
@@ -123,6 +129,7 @@ void Galaga::Update(CMPUT350::GameContext *context) {
         case GameState::waveEnter:
             spawnTimer++;
             if (spawnTimer >= 20 && numEnemies<8){
+                std::cout << "spawning enemy\n";
                 enemies[numEnemies] = SpawnEnemy(context, numEnemies);
                 context->mEngineView->AddGameObject(enemies[numEnemies]);
                 spawnTimer = 0;

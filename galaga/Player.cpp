@@ -5,7 +5,7 @@
 #include "Enemy.h"
 
 Player::Player(CMPUT350::Point2D loc)
-    : mMoveLeft(false), mMoveRight(false), mShoot(false), mLives(3), mActive(true), canEnter(true)
+    : mMoveLeft(false), mMoveRight(false), mShoot(false), mLives(3), mActive(true), canEnter(true), needDie(false)
 {
     mLocation = mSpawn = loc;
     mBounds.topLeft = mLocation - (mSize/2);
@@ -23,7 +23,6 @@ void Player::Initialize(CMPUT350::GameContext* context)
     context->mNotificationManager->Register(context->CurrObject, "Shoot");
     context->mNotificationManager->Register(context->CurrObject, "MoveLeftStop");
     context->mNotificationManager->Register(context->CurrObject, "MoveRightStop");
-    context->mNotificationManager->Register(context->CurrObject, "Respawn");
     clock.reset();
 }
 
@@ -73,6 +72,10 @@ void Player::Update(CMPUT350::GameContext* context)
 
 void Player::LateUpdate(CMPUT350::GameContext* context)
 {
+    if (needDie && mAlive) {
+        context->mNotificationManager->Notify("PlayerDead");
+        Kill();
+    }
 }
 
 /**
@@ -164,7 +167,7 @@ void Player::CollisionEnter(const std::shared_ptr<CMPUT350::CollisionObject>& ob
         if (!bullet->IsPlayerBullet()){
             mActive = false;
             if (--mLives < 0) {
-                Kill();
+                needDie = true;
             }
         }
     }if (enemy != nullptr){

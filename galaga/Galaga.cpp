@@ -111,6 +111,7 @@ void Galaga::Initialize(CMPUT350::GameContext *context) {
     context->mEngineView->InstallKeyUpNotification(static_cast<int>(sf::Keyboard::Key::D), "MoveRightStop");
     context->mNotificationManager->Register(context->CurrObject, "InsertCoins");
     context->mNotificationManager->Register(context->CurrObject, "StartGame");
+    context->mNotificationManager->Register(context->CurrObject, "PlayerDead");
 }
 
 void Galaga::Update(CMPUT350::GameContext *context) {
@@ -211,6 +212,9 @@ void Galaga::ReceiveNotification(const std::string& key){
                 showCoinMessage = true;
             }
         }
+    }
+    if (key == "PlayerDead") {
+        SetState(GameState::gameOver);
     }
 }
 

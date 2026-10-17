@@ -18,6 +18,7 @@ private:
     bool mMoveRight;
     bool mShoot;
     bool mActive;
+    bool needDie;
     int mLives;
 
     std::weak_ptr<Bullet> bullet1;

@@ -52,7 +52,7 @@ void Enemy::CollisionEnter(const std::shared_ptr<CMPUT350::CollisionObject>& obj
 	auto bullet = std::dynamic_pointer_cast<Bullet>(obj); 
 	auto player = std::dynamic_pointer_cast<Player>(obj);
 
-	if (bullet&& bullet->IsPlayerBullet() && bullet->IsAlive()) {
+	if (bullet&& bullet->IsPlayerBullet()) {
 		// both Enemy and Bullet are already axis-aligned rectangles, so no need to check further
 		mLives--;
 		if (mLives ==1){

@@ -1,6 +1,7 @@
 #include "Enemy.h"
 #include "Bullet.h"
 #include "Bezier.h"
+#include "Player.h"
 
 Enemy::Enemy(CMPUT350::Point2D loc, const std::vector<CMPUT350::Point2D>& path, CMPUT350::Point2D stopPosition)
 	: pos(loc), bounds(loc.x-20.0f, loc.y -20.f, 40.f, 40.f), alive(true), mShapes(1), mPath(path), mStopPosition(stopPosition)
@@ -14,9 +15,9 @@ void Enemy::Initialize(CMPUT350::GameContext* context)
 }
 
 void Enemy::Update(CMPUT350::GameContext* context)
-{
+{	
+	float dt = clock.restart().asMicroseconds() / 1000000.;
 	if (t<1.0f){
-		float dt = clock.restart().asMicroseconds() / 1000000.;
 		pos = CMPUT350::Bezier::GetPoint(mPath, t);
 		CMPUT350::Point2D slope = CMPUT350::Bezier::GetSlope(mPath, t);
 		rotation = CMPUT350::Bezier::GetRotation(slope, t);
@@ -43,15 +44,31 @@ void Enemy::RenderForeground(CMPUT350::GameContext* context)
 {
 	if (!alive)
 		return;
-	context->ScreenContext->DrawRect({{-20, -20}, {20, 20}}, CMPUT350::Colors::red);
+	context->ScreenContext->DrawRect({{-20, -20}, {20, 20}}, color);
 }
 
 void Enemy::CollisionEnter(const std::shared_ptr<CMPUT350::CollisionObject>& obj)
-{
-	if (std::dynamic_pointer_cast<Bullet>(obj)) {
+{	
+	auto bullet = std::dynamic_pointer_cast<Bullet>(obj); 
+	auto player = std::dynamic_pointer_cast<Player>(obj);
+
+	if (bullet&& bullet->IsPlayerBullet()) {
 		// both Enemy and Bullet are already axis-aligned rectangles, so no need to check further
+		mLives--;
+		if (mLives ==0){
+			Kill();	
+		}
+		
+	}
+	else if (player){
 		Kill();
 	}
+}
+
+void Enemy::Shoot(CMPUT350::GameContext* context){
+	CMPUT350::Point2D heading(0.0f, 6.0f);
+	std::shared_ptr<Bullet> bullet = std::make_shared<Bullet>(pos, heading, false);
+	context->mEngineView->AddGameObject(bullet);
 }
 
 void Enemy::Kill()
@@ -88,6 +105,8 @@ float Enemy::GetRotation() const{
 //Enemy 1
 void Enemy1::Initialize(CMPUT350::GameContext* context){
 	Enemy::Initialize(context);
+	mLives = 1;
+	
 }
 
 void Enemy1::LateUpdate(CMPUT350::GameContext* context){
@@ -101,10 +120,11 @@ bool Enemy1::Attack(CMPUT350::GameContext* context, const CMPUT350::Point2D &tar
 
 	mPath = {
         pos,
-		{pos.x + 700.f, pos.y + 1100.f},
-		{pos.x - 700.f, pos.y + 1100.f},
+		{pos.x + 500.f, pos.y + 1800.f},
+		{pos.x - 500.f, pos.y + 1800.f},
 		mStopPosition
     };
+	Shoot(context);
 	t = 0.0f;
 	return true;
 }
@@ -116,6 +136,7 @@ void Enemy1::RenderForeground(CMPUT350::GameContext *context){
 //Enemy 2
 void Enemy2::Initialize(CMPUT350::GameContext* context){
 	Enemy::Initialize(context);
+	mLives = 2;
 }
 
 void Enemy2::LateUpdate(CMPUT350::GameContext* context){
@@ -146,6 +167,7 @@ void Enemy2::RenderForeground(CMPUT350::GameContext *context){
 //Enemy 3
 void Enemy3::Initialize(CMPUT350::GameContext* context){
 	Enemy::Initialize(context);
+	mLives = 3;
 }
 
 void Enemy3::LateUpdate(CMPUT350::GameContext* context){

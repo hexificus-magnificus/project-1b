@@ -161,13 +161,13 @@ void Galaga::Update(CMPUT350::GameContext *context) {
                 if (attackTimer >= 30){
                     attackTimer = 0;
                 
-                for (int i = 0; i<enemies.size(); i++){
-                    int attacker = (nextAttacker+i)%enemies.size();
-                    if (enemies[attacker] && enemies[attacker]->IsAlive() &&enemies[attacker]->Attack(context, player->GetLocation())){
-                        std::cout << "Enemy " << attacker << " attacks!" << std::endl;
-                        nextAttacker = (attacker + 1) % enemies.size();
+                    for (int i = 0; i<enemies.size(); i++){
+                        int attacker = (nextAttacker+i)%enemies.size();
+                        if (enemies[attacker] && enemies[attacker]->IsAlive() &&enemies[attacker]->Attack(context, player->GetLocation())){
+                            std::cout << "Enemy " << attacker << " attacks!" << std::endl;
+                            nextAttacker = (attacker + 1) % enemies.size();
 
-                        break;
+                            break;
                     }
                 }
             }

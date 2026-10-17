@@ -19,6 +19,8 @@ public:
     virtual bool Attack(CMPUT350::GameContext *context, const CMPUT350::Point2D &target) = 0;
     virtual CMPUT350::Point2D GetLocation() const override;
 	virtual float GetRotation() const override;
+	
+	
 
     // Graphics Object Functions
     void RenderBackground(CMPUT350::GameContext* context) override;
@@ -34,14 +36,16 @@ public:
 	CMPUT350::Point2D pos;
 	float t = 0.0f;
 	CMPUT350::Point2D mStopPosition;
+	int mLives;
+	CMPUT350::RGBColor color = CMPUT350::Colors::red;
+	void Shoot(CMPUT350::GameContext* context);
+
 private:
 	CMPUT350::Rect bounds;
     std::vector<CMPUT350::Shape> mShapes;
 	bool alive;
     CMPUT350::Point2D mStartPos;
     float rotation = 0.0f;
-	CMPUT350::Point2D mStopPosition;
-	
 	sf::Clock clock;
 };
 

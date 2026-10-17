@@ -2,6 +2,7 @@
 #include "Player.h"
 #include "Bullet.h"
 #include "NotificationManager.h"
+#include "Enemy.h"
 
 Player::Player(CMPUT350::Point2D loc)
     : mMoveLeft(false), mMoveRight(false), mShoot(false), mLives(3), mActive(true), canEnter(true)
@@ -158,12 +159,18 @@ void Player::CollisionEnter(const std::shared_ptr<CMPUT350::CollisionObject>& ob
 {
     //inspiration for code from: https://stackoverflow.com/a/351865
     Bullet* bullet = dynamic_cast<Bullet*>(obj.get());
+    Enemy* enemy = dynamic_cast<Enemy*>(obj.get());
     if (bullet != nullptr){
         if (!bullet->IsPlayerBullet()){
             mActive = false;
             if (--mLives < 0) {
                 Kill();
             }
+        }
+    }if (enemy != nullptr){
+        mActive = false;
+        if (--mLives <0){
+            Kill();
         }
     }
 }

@@ -21,6 +21,7 @@ void Galaga::SetState(GameState s) {
     }
     if (s == GameState::waveEnter) {
         ++wave;
+        ++*waveCtr;
         numEnemies = 0;
         spawnTimer = 0;
         attackTimer = 0;
@@ -110,8 +111,8 @@ void Galaga::Update(CMPUT350::GameContext *context) {
         case GameState::menu:
             break;
         case GameState::startup:
-            scoreCtr = std::make_shared<UICounter>("Score: {}", 0, CMPUT350::Point2D(10, 10));
-            waveCtr = std::make_shared<UICounter>("Wave: {}", 1, CMPUT350::Point2D(10, 870));
+            scoreCtr = std::make_shared<UICounter>("Score: %d", 0, CMPUT350::Point2D(10, 10));
+            waveCtr = std::make_shared<UICounter>("Wave: %d", 1, CMPUT350::Point2D(10, 870));
             context->mEngineView->AddGameObject(std::make_shared<Player>(CMPUT350::Point2D(768 / 2, 900)));
             context->mEngineView->AddGameObject(scoreCtr);
             context->mEngineView->AddGameObject(waveCtr);

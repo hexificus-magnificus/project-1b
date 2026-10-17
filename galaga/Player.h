@@ -15,12 +15,10 @@ private:
     bool mAlive;
     bool mMoveLeft;
     bool mMoveRight;
+    bool mShoot;
 
     std::weak_ptr<Bullet> bullet1;
     std::weak_ptr<Bullet> bullet2;
-
-    CMPUT350::Point2D mCenterOfShip;
-    CMPUT350::GameContext* mContext =nullptr;
     
     sf::Clock clock;
     
